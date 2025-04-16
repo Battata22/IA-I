@@ -11,6 +11,16 @@ public class GameManager : MonoBehaviour
     public float _width;
     public float _height;
 
+    [SerializeField, Range(0f, 1f)] public float _separationForce;
+    [SerializeField, Range(0f, 1f)] public float _cohesionForce;
+    [SerializeField, Range(0f, 1f)] public float _allignmentForce;
+
+    [SerializeField] public float _radioSeparation;
+    [SerializeField] public float _radioAllignment;
+
+    public List<Boid> _myBoids = new();
+
+
 
     public Vector3 GetPosition(Vector3 position)
     {
@@ -45,16 +55,8 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
-    void Start()
-    {
-        
-    }
 
-    
-    void Update()
-    {
-        
-    }
+
 
     private void OnDrawGizmos()
     {
