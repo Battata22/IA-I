@@ -12,7 +12,7 @@ public class Character : Agent
         AddForce(Evade(_target));
 
 
-        //AddForce(Arrive(_objTarget.position));
+        AddForce(Arrive(_objTarget.position));
 
         //transform.position += _vel * Time.deltaTime;
         //transform.forward = _vel;

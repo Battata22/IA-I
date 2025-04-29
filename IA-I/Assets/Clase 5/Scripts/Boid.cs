@@ -9,7 +9,6 @@ public class Boid : MonoBehaviour
     [SerializeField] float _speed;
     [SerializeField] float _maxSpeed;
     [SerializeField] public Vector3 _velocity;
-
     public Vector3 Velocity { get { return _velocity; } }
 
     private void Start()
@@ -126,7 +125,7 @@ public class Boid : MonoBehaviour
         Vector3 steering = desired - _velocity;
         steering = Vector3.ClampMagnitude(steering, _maxSpeed);
 
-        return steering;
+        return new Vector3(steering.x, 0, steering.z);
     }
 
     private void OnDrawGizmos()
