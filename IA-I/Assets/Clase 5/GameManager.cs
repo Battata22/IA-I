@@ -22,6 +22,10 @@ public class GameManager : MonoBehaviour
 
     public List<BoidBehaivour> _myBoidsParcial = new();
 
+    public HunterBehaivour Hunter;
+
+    public List<FoodBehaivour> _foodInStage = new();
+
 
 
     public Vector3 GetPosition(Vector3 position)

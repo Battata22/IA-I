@@ -7,9 +7,10 @@ public class BoidBehaivour : MonoBehaviour
 
     [SerializeField] float _speed;
     [SerializeField] float _maxSpeed;
-    [SerializeField] float _visionRadius;
+    public float _visionRadius;
     [SerializeField, Range(0, 1)] protected float _maxForce;
     [SerializeField] public Vector3 _velocity;
+    [SerializeField] LayerMask _maskComida, _maskBoids;
     public Vector3 Velocity { get { return _velocity; } }
 
     public PapaNodo _papaNode;
@@ -27,21 +28,24 @@ public class BoidBehaivour : MonoBehaviour
     {
         _papaNode.Execute(this);
 
+        waitRandom += Time.deltaTime;
+
         if (useFlocking == true)
         {
             Floking();
         }
-        if (useEvade == true)
+        else if (useEvade == true)
         {
-            //Evade(/*el malo*/);
+            AddForce(Evade(GameManager.instance.Hunter));
         }
-        if (useFood == true)
+        else if (useFood == true)
         {
-            //Arrive(/*food*/);
+            AddForce(Arrive(CalculateNearbyFood()));
         }
-        if (useRandom == true)
+        else if (useRandom == true)
         {
             //RandomMovement
+            AddForce(RandomDir());
         }
 
         transform.position = GameManager.instance.GetPosition(transform.position + _velocity * Time.deltaTime);
@@ -146,6 +150,13 @@ public class BoidBehaivour : MonoBehaviour
         return new Vector3(steering.x, 0, steering.z);
     }
 
+    public Vector3 Evade(HunterBehaivour target)
+    {
+        var desired = target.transform.position + target.Vel;
+
+        return Flee(desired);
+    }
+
     public Vector3 Flee(Vector3 target) => -Seek(target);
 
     Vector3 Arrive(Vector3 target)
@@ -177,6 +188,66 @@ public class BoidBehaivour : MonoBehaviour
     void AddForce(Vector3 dir)
     {
         _velocity = Vector3.ClampMagnitude(_velocity + dir, _maxSpeed);
+    }
+
+    public bool IsFoodNearby()
+    {
+        var _food = Physics.OverlapSphere(transform.position, _visionRadius, _maskComida);
+        if (_food != null)
+        {
+            return true;  
+        }
+        else return false;
+    }
+
+    [SerializeField] float _lastClosestFood = 10000;
+    [SerializeField] Vector3 _closestFood;
+
+    public Vector3 CalculateNearbyFood()
+    {
+        var _food = Physics.OverlapSphere(transform.position, _visionRadius, _maskComida);
+        foreach (var f in _food)
+        {
+            if (_lastClosestFood > Vector3.Distance(f.transform.position, transform.position))
+            {
+                _lastClosestFood = Vector3.Distance(f.transform.position, transform.position);
+                _closestFood = f.transform.position;
+            }
+        }
+        return _closestFood;
+    }
+
+    public Vector3 CalculateNearbyBoid()
+    {
+        var _boids = Physics.OverlapSphere(transform.position, _visionRadius, _maskBoids);
+        foreach (var boid in _boids)
+        {
+            if (_lastClosestFood > Vector3.Distance(boid.transform.position, transform.position))
+            {
+                _lastClosestFood = Vector3.Distance(boid.transform.position, transform.position);
+                _closestFood = boid.transform.position;
+            }
+        }
+        return _closestFood;
+    }
+
+    float waitRandom = 1000;
+    [SerializeField] float randomSearchTime;
+    [SerializeField] Vector3 randomDir;
+
+    public Vector3 RandomDir()
+    {
+        if (waitRandom >= randomSearchTime)
+        {
+            waitRandom = 0;
+
+             float random1 = Random.Range(-GameManager.instance._width, GameManager.instance._width);
+             float random2 = Random.Range(-GameManager.instance._height, GameManager.instance._height);
+
+            randomDir = new Vector3(random1, 1, random2);
+        }
+
+        return randomDir;
     }
 
     private void OnDrawGizmos()

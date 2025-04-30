@@ -21,14 +21,31 @@ public class NodoPregunta : PapaNodo
         {
             case TypeQuestion.isHunterNearby:
                 //buscar  hunter cerca
+                if(Vector3.Distance(GameManager.instance.Hunter.transform.position, boid.transform.position) <= boid._visionRadius)
+                {
+                    trueNode.Execute(boid);
+                }
+                else
+                {
+                    falseNode.Execute(boid);
+                }
 
                 break;
             case TypeQuestion.isFoodNearby:
                 //buscar comida cercana
+                if (boid.IsFoodNearby() == true)
+                {
+                    trueNode.Execute(boid);
+                }
+                else
+                {
+                    falseNode.Execute(boid);
+                }
 
                 break;
             case TypeQuestion.isBoidNearby:
                 //chequear si hay boid cerca
+
 
                 break;
         }

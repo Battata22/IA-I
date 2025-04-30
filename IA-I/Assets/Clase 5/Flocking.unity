@@ -716,7 +716,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 3690039070939371003}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7952bfe79c36ca34ca1b03ff3539effc, type: 3}
   m_Name: 
@@ -759,6 +759,8 @@ MonoBehaviour:
   _radioAllignment: 5
   _myBoids: []
   _myBoidsParcial: []
+  Hunter: {fileID: 0}
+  _foodInStage: []
 --- !u!4 &704959880
 Transform:
   m_ObjectHideFlags: 0
@@ -1305,7 +1307,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1718275082
 Transform:
   m_ObjectHideFlags: 0
@@ -1639,6 +1641,11 @@ PrefabInstance:
       propertyPath: _target
       value: 
       objectReference: {fileID: 377842317}
+    - target: {fileID: 3501309856209834021, guid: 0a807bb610dd4f64a994c82ff525d280,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5244060634759782790, guid: 0a807bb610dd4f64a994c82ff525d280,
         type: 3}
       propertyPath: m_Name
@@ -1877,7 +1884,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8141185777189380262}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 13efaf34d69e7aa47b41a26bf4675365, type: 3}
   m_Name: 
@@ -1887,11 +1894,21 @@ MonoBehaviour:
   _visionRadius: 3
   _maxForce: 0.648
   _velocity: {x: 0, y: 0, z: 0}
+  _maskComida:
+    serializedVersion: 2
+    m_Bits: 0
+  _maskBoids:
+    serializedVersion: 2
+    m_Bits: 0
   _papaNode: {fileID: 132153323}
   useFlocking: 0
   useEvade: 0
   useFood: 0
   useRandom: 0
+  _lastClosestFood: 10000
+  _closestFood: {x: 0, y: 0, z: 0}
+  randomSearchTime: 1
+  randomDir: {x: 0, y: 0, z: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
