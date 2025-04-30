@@ -19,7 +19,7 @@ public class Comida : MonoBehaviour
             {
                 Vector3 spawnPosition = hit.point;
 
-                Instantiate(cuadradoPrefab, spawnPosition, Quaternion.identity);
+                Instantiate(cuadradoPrefab, new Vector3(spawnPosition.x, spawnPosition.y + 1, spawnPosition.z), Quaternion.identity);
             }
             else
             {
@@ -27,7 +27,7 @@ public class Comida : MonoBehaviour
                 Vector3 spawnPosition = Camera.main.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, 10f));
                 spawnPosition.z = 0f; 
 
-                Instantiate(cuadradoPrefab, spawnPosition, Quaternion.identity);
+                Instantiate(cuadradoPrefab, new Vector3(spawnPosition.x, spawnPosition.y + 1, spawnPosition.z), Quaternion.identity);
             }
         }
     }

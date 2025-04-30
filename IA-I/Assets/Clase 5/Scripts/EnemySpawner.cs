@@ -21,14 +21,14 @@ public class EnemySpawner : MonoBehaviour
                 Vector3 spawnPosition = hit.point;
 
 
-                Instantiate(enemyPrefab, spawnPosition, Quaternion.identity);
+                Instantiate(enemyPrefab, new Vector3(spawnPosition.x, spawnPosition.y + 1, spawnPosition.z), Quaternion.identity);
             }
             else
             {
                 Vector3 spawnPosition = Camera.main.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, 10f));
                 spawnPosition.z = 0f;
 
-                Instantiate(enemyPrefab, spawnPosition, Quaternion.identity);
+                Instantiate(enemyPrefab, new Vector3(spawnPosition.x, spawnPosition.y + 1, spawnPosition.z), Quaternion.identity);
             }
         }
     }

@@ -20,6 +20,8 @@ public class GameManager : MonoBehaviour
 
     public List<Boid> _myBoids = new();
 
+    public List<BoidBehaivour> _myBoidsParcial = new();
+
 
 
     public Vector3 GetPosition(Vector3 position)
