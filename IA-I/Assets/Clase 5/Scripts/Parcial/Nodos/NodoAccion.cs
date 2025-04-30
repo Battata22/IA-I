@@ -9,7 +9,7 @@ public class NodoAccion : PapaNodo
 
     public enum TypeQuestion
     {
-        Flocking, LookForFood, Run
+        Flocking, ArriveFood, RunFromHunter, Random
     }
 
     public override void Execute(BoidBehaivour boid)
@@ -19,21 +19,40 @@ public class NodoAccion : PapaNodo
             case TypeQuestion.Flocking:
                 //movimiento normal
                 //Floking();
+                SetTodoFalse(boid);
                 boid.useFlocking = true;
 
                 break;
-            case TypeQuestion.LookForFood:
+            case TypeQuestion.ArriveFood:
                 //buscar comida con el fov y si hay hacer el arrive y comerla
+                SetTodoFalse(boid);
+                boid.useFood = true;
 
                 break;
-            case TypeQuestion.Run:
+            case TypeQuestion.RunFromHunter:
                 //chequear si esta el cazador y correr de el
+                SetTodoFalse(boid);
                 boid.useEvade = true;
+
+                break;
+            case TypeQuestion.Random:
+                //chequear si esta el cazador y correr de el
+                SetTodoFalse(boid);
+                boid.useRandom = true;
 
                 break;
         }
     }
 
+    void SetTodoFalse(BoidBehaivour boid)
+    {
+        boid.useFlocking = false;
+        boid.useEvade = false;
+        boid.useFood = false;
+        boid.useRandom = false;
+    }
+
+    #region Nose
     //void Floking()
     //{
     //    AddForce(Separation(GameManager.instance._myBoidsParcial, GameManager.instance._radioSeparation) * GameManager.instance._separationForce);
@@ -133,7 +152,8 @@ public class NodoAccion : PapaNodo
     //    steering = Vector3.ClampMagnitude(steering, _maxSpeed);
 
     //    return new Vector3(steering.x, 0, steering.z);
-    //}
+    //} 
+    #endregion
 
 
     #region OG

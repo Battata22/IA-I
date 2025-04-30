@@ -37,7 +37,6 @@ public class Character : Agent
         steering = Vector3.ClampMagnitude(steering, _maxForce);
 
         return steering;
-        
     }
 
     private void OnDrawGizmosSelected()

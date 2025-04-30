@@ -7,12 +7,14 @@ public class BoidBehaivour : MonoBehaviour
 
     [SerializeField] float _speed;
     [SerializeField] float _maxSpeed;
+    [SerializeField] float _visionRadius;
+    [SerializeField, Range(0, 1)] protected float _maxForce;
     [SerializeField] public Vector3 _velocity;
     public Vector3 Velocity { get { return _velocity; } }
 
     public PapaNodo _papaNode;
 
-    public bool useFlocking = false, useEvade = false;
+    public bool useFlocking = false, useEvade = false, useFood = false, useRandom = false;
 
     private void Start()
     {
@@ -32,6 +34,14 @@ public class BoidBehaivour : MonoBehaviour
         if (useEvade == true)
         {
             //Evade(/*el malo*/);
+        }
+        if (useFood == true)
+        {
+            //Arrive(/*food*/);
+        }
+        if (useRandom == true)
+        {
+            //RandomMovement
         }
 
         transform.position = GameManager.instance.GetPosition(transform.position + _velocity * Time.deltaTime);
@@ -136,7 +146,33 @@ public class BoidBehaivour : MonoBehaviour
         return new Vector3(steering.x, 0, steering.z);
     }
 
-    public Vector3 Evade(Vector3 target) => -Seek(target);
+    public Vector3 Flee(Vector3 target) => -Seek(target);
+
+    Vector3 Arrive(Vector3 target)
+    {
+        float dist = Vector3.Distance(transform.position, target);
+
+        if (dist > _visionRadius)
+        {
+            return Seek(target);
+        }
+
+        Vector3 dir = target - transform.position;
+        dir = dir.normalized;
+        dir *= _maxSpeed * (dist / _visionRadius);
+
+        Vector3 steering = dir - _velocity;
+        steering = Vector3.ClampMagnitude(steering, _maxForce);
+
+        return steering;
+    }
+
+    //public Vector3 Evade(Agent target)
+    //{
+    //    var desired = target.transform.position + target.Vel;
+
+    //    return Flee(desired);
+    //}
 
     void AddForce(Vector3 dir)
     {
@@ -152,8 +188,6 @@ public class BoidBehaivour : MonoBehaviour
 
             Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(transform.position, GameManager.instance._radioAllignment);
-
-
         }
 
     }

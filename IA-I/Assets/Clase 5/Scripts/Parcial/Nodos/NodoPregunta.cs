@@ -11,46 +11,64 @@ public class NodoPregunta : PapaNodo
 
     public enum TypeQuestion
     {
-        isFood, isHunter, isBoid
+        isFoodNearby, isHunterNearby, isBoidNearby
     }
 
     public override void Execute(BoidBehaivour boid)
     {
-    //    switch (questionType)
-    //    {
-    //        case TypeQuestion.isFood:
-    //            if (boid._viScript.isStealing == true)
-    //            {
-    //                trueNode.Execute(boid);
-    //            }
-    //            else
-    //            {
-    //                falseNode.Execute(boid);
-    //            }
-    //            break;
 
-    //        case TypeQuestion.Run:
-    //            if (Vector3.Distance(boid._viScript.transform.position, boid.transform.position) < 2)
-    //            {
-    //                trueNode.Execute(boid);
-    //            }
-    //            else
-    //            {
-    //                falseNode.Execute(boid);
-    //            }
-    //            break;
+        switch (questionType)
+        {
+            case TypeQuestion.isHunterNearby:
+                //buscar  hunter cerca
 
-    //        case TypeQuestion.Flocking:
-    //            if (boid._viScript.isArmed == true)
-    //            {
-    //                trueNode.Execute(boid);
-    //            }
-    //            else
-    //            {
-    //                falseNode.Execute(boid, velocity, maxSpeed);
-    //            }
-    //            break;
-    //    }
+                break;
+            case TypeQuestion.isFoodNearby:
+                //buscar comida cercana
+
+                break;
+            case TypeQuestion.isBoidNearby:
+                //chequear si hay boid cerca
+
+                break;
+        }
+
+
+        //    switch (questionType)
+        //    {
+        //        case TypeQuestion.isFood:
+        //            if (boid._viScript.isStealing == true)
+        //            {
+        //                trueNode.Execute(boid);
+        //            }
+        //            else
+        //            {
+        //                falseNode.Execute(boid);
+        //            }
+        //            break;
+
+        //        case TypeQuestion.Run:
+        //            if (Vector3.Distance(boid._viScript.transform.position, boid.transform.position) < 2)
+        //            {
+        //                trueNode.Execute(boid);
+        //            }
+        //            else
+        //            {
+        //                falseNode.Execute(boid);
+        //            }
+        //            break;
+
+        //        case TypeQuestion.Flocking:
+        //            if (boid._viScript.isArmed == true)
+        //            {
+        //                trueNode.Execute(boid);
+        //            }
+        //            else
+        //            {
+        //                falseNode.Execute(boid, velocity, maxSpeed);
+        //            }
+        //            break;
+        //    }
     }
 
     #region OG
