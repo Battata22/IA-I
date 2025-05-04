@@ -33,19 +33,23 @@ public class BoidBehaivour : MonoBehaviour
         if (useFlocking == true)
         {
             Floking();
+            print("Flocking");
         }
         else if (useEvade == true)
         {
             AddForce(Evade(GameManager.instance.Hunter));
+            print("Evade");
         }
         else if (useFood == true)
         {
             AddForce(Arrive(CalculateNearbyFood()));
+            print("Food");
         }
         else if (useRandom == true)
         {
             //RandomMovement
             AddForce(RandomDir());
+            print("random");
         }
 
         transform.position = GameManager.instance.GetPosition(transform.position + _velocity * Time.deltaTime);
@@ -154,7 +158,7 @@ public class BoidBehaivour : MonoBehaviour
     {
         var desired = target.transform.position + target.Vel;
 
-        return Flee(desired);
+        return Flee(-desired);
     }
 
     public Vector3 Flee(Vector3 target) => -Seek(target);
@@ -192,10 +196,11 @@ public class BoidBehaivour : MonoBehaviour
 
     public bool IsFoodNearby()
     {
-        var _food = Physics.OverlapSphere(transform.position, _visionRadius, _maskComida);
-        if (_food != null)
+        Collider[] _food = Physics.OverlapSphere(transform.position, _visionRadius, _maskComida);
+        if (_food.Length > 0)
         {
-            return true;  
+            print(_food[0]);
+            return true;
         }
         else return false;
     }
@@ -217,18 +222,30 @@ public class BoidBehaivour : MonoBehaviour
         return _closestFood;
     }
 
+    public bool IsBoidNearby()
+    {
+        var _boid = Physics.OverlapSphere(transform.position, _visionRadius, _maskBoids);
+        if (_boid != null)
+        {
+            return true;
+        }
+        else return false;
+    }
+
+    [SerializeField] float _lastClosestBoid = 10000;
+    [SerializeField] Vector3 _closestBoid;
     public Vector3 CalculateNearbyBoid()
     {
         var _boids = Physics.OverlapSphere(transform.position, _visionRadius, _maskBoids);
         foreach (var boid in _boids)
         {
-            if (_lastClosestFood > Vector3.Distance(boid.transform.position, transform.position))
+            if (_lastClosestBoid > Vector3.Distance(boid.transform.position, transform.position))
             {
-                _lastClosestFood = Vector3.Distance(boid.transform.position, transform.position);
-                _closestFood = boid.transform.position;
+                _lastClosestBoid = Vector3.Distance(boid.transform.position, transform.position);
+                _closestBoid = boid.transform.position;
             }
         }
-        return _closestFood;
+        return _closestBoid;
     }
 
     float waitRandom = 1000;
@@ -259,6 +276,9 @@ public class BoidBehaivour : MonoBehaviour
 
             Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(transform.position, GameManager.instance._radioAllignment);
+
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawWireSphere(transform.position, _visionRadius);
         }
 
     }

@@ -45,7 +45,14 @@ public class NodoPregunta : PapaNodo
                 break;
             case TypeQuestion.isBoidNearby:
                 //chequear si hay boid cerca
-
+                if (boid.IsBoidNearby() == true)
+                {
+                    trueNode.Execute(boid);
+                }
+                else
+                {
+                    falseNode.Execute(boid);
+                }
 
                 break;
         }
