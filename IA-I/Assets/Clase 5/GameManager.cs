@@ -33,10 +33,10 @@ public class GameManager : MonoBehaviour
 
     public Vector3 GetPosition(Vector3 position)
     {
-        if (position.x < -_width) position.x = _width;
-        if (position.x > _width) position.x = -_width;
-        if (position.z < -_height) position.z = _height;
-        if (position.z > _height) position.z = -_height;
+        if (position.x < -_width) position.x = _width - _offset;
+        if (position.x > _width) position.x = -_width + _offset;
+        if (position.z < -_height) position.z = _height - _offset;
+        if (position.z > _height) position.z = -_height + _offset;
 
         return position;
     }
