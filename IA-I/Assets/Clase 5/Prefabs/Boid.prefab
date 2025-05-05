@@ -159,15 +159,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _speed: 6
   _maxSpeed: 6
-  _visionRadius: 3
+  _visionRadius: 5
   _maxForce: 0.648
   _velocity: {x: 0, y: 0, z: 0}
   _maskComida:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
   _maskBoids:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 512
   _papaNode: {fileID: 0}
   useFlocking: 0
   useEvade: 0

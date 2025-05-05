@@ -14,6 +14,14 @@ public class NodoPregunta : PapaNodo
         isFoodNearby, isHunterNearby, isBoidNearby
     }
 
+    private void Start()
+    {
+        if (gameObject.name == "Q_HunterCerca")
+        {
+            GameManager.instance.qNodoStart = this;
+        }
+    }
+
     public override void Execute(BoidBehaivour boid)
     {
 

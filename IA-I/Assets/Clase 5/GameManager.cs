@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
 
     public float _width;
     public float _height;
+    public float _offset;
 
     [SerializeField, Range(0f, 1f)] public float _separationForce;
     [SerializeField, Range(0f, 1f)] public float _cohesionForce;
@@ -26,27 +27,17 @@ public class GameManager : MonoBehaviour
 
     public List<FoodBehaivour> _foodInStage = new();
 
+    public NodoPregunta qNodoStart;
+
 
 
     public Vector3 GetPosition(Vector3 position)
     {
-        if (position.x < -_width)
-        {
-            position.x = _width;
-        }
-        if (position.x > _width)
-        {
-            position.x = -_width;
-        }
-        if (position.z < -_height)
-        {
-            position.z = _height;
-        }
-        if (position.z > _height)
-        {
-            position.z = -_height;
-        }
-    
+        if (position.x < -_width) position.x = _width;
+        if (position.x > _width) position.x = -_width;
+        if (position.z < -_height) position.z = _height;
+        if (position.z > _height) position.z = -_height;
+
         return position;
     }
 

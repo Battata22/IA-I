@@ -22,6 +22,11 @@ public class BoidBehaivour : MonoBehaviour
         GameManager.instance._myBoidsParcial.Add(this);
 
         AddForce(new Vector3(Random.Range(-1, 1), 0, Random.Range(-1, 1)) * _maxSpeed);
+
+        if (_papaNode == null)
+        {
+            _papaNode = GameManager.instance.qNodoStart;
+        }
     }
 
     private void Update()
@@ -53,8 +58,16 @@ public class BoidBehaivour : MonoBehaviour
         }
 
         transform.position = GameManager.instance.GetPosition(transform.position + _velocity * Time.deltaTime);
+        //profe 1 transform.position += _velocity * Time.deltaTime;
 
-        transform.forward = _velocity;
+        if (_velocity != Vector3.zero)
+        {
+            transform.forward = _velocity;
+        }
+
+        // profe 2 transform.position = GameManager.instance.GetPosition(transform.position);
+
+        transform.localRotation = new Quaternion(0, transform.localRotation.y, 0, 0);
     }
 
     void Floking()
@@ -196,10 +209,9 @@ public class BoidBehaivour : MonoBehaviour
 
     public bool IsFoodNearby()
     {
-        Collider[] _food = Physics.OverlapSphere(transform.position, _visionRadius, _maskComida);
+        var _food = Physics.OverlapSphere(transform.position, _visionRadius, _maskComida);
         if (_food.Length > 0)
         {
-            print(_food[0]);
             return true;
         }
         else return false;
@@ -219,6 +231,7 @@ public class BoidBehaivour : MonoBehaviour
                 _closestFood = f.transform.position;
             }
         }
+        _lastClosestFood = 10000;
         return _closestFood;
     }
 
@@ -245,6 +258,7 @@ public class BoidBehaivour : MonoBehaviour
                 _closestBoid = boid.transform.position;
             }
         }
+        _lastClosestBoid = 10000;
         return _closestBoid;
     }
 
@@ -265,6 +279,14 @@ public class BoidBehaivour : MonoBehaviour
         }
 
         return randomDir;
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.layer == 7)
+        {
+            Destroy(collision.gameObject);
+        }
     }
 
     private void OnDrawGizmos()

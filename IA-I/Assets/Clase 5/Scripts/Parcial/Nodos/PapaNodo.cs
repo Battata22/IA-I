@@ -4,7 +4,6 @@ using UnityEngine;
 
 public abstract class PapaNodo : MonoBehaviour
 {
-
     public abstract void Execute(BoidBehaivour boid);
 
 }

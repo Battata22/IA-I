@@ -6,12 +6,15 @@ public class FSM
 {
     IState _currentState;
     Dictionary<AgentStates, IState> _allStates = new();
+    //Dictionary<AgentStates, IState> _hunterAllStates = new();
+
 
     public void AddState(AgentStates newState, IState state)
     {
         if (_allStates.ContainsKey(newState)) return;
         _allStates.Add(newState, state);
     }
+
 
     public void ChangeState(AgentStates newState)
     {
