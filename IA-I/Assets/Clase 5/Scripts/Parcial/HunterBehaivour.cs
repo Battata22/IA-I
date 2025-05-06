@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class HunterBehaivour : MonoBehaviour
 {
@@ -14,7 +16,6 @@ public class HunterBehaivour : MonoBehaviour
     }
 
     FSM _fsm;
-    [SerializeField] MeshRenderer _meshRenderer;
     [SerializeField] float _speed;
 
     [SerializeField] Transform[] _waypoints;
@@ -25,6 +26,14 @@ public class HunterBehaivour : MonoBehaviour
     [SerializeField] float _visionRadius;
     [SerializeField] float _maxForce;
 
+    [SerializeField] float _maxEnergy;
+    [SerializeField] float _energia;
+    [SerializeField] float _energyDrain;
+
+    [SerializeField] Slider _energySlider;
+
+    [SerializeField] TextMeshProUGUI _textEstado;
+
     private void Awake()
     {
         GameManager.instance.Hunter = this;
@@ -32,14 +41,16 @@ public class HunterBehaivour : MonoBehaviour
         _fsm = new FSM();
 
         //add state rest
-        _fsm.AddState(HunterStates.Rest, new RestState(_fsm));
+        _fsm.AddState(HunterStates.Rest, new RestState(_fsm, _maxEnergy, _energia, transform, _radiusBoidDetection, 
+            _layerBoid, _energyDrain, _vel, _energySlider, AddForce, Seek, _textEstado));
 
         //add state patrol
         _fsm.AddState(HunterStates.Patrol, new PatrolState(_fsm, transform, _waypoints, _radiusBoidDetection,
-             _layerBoid, Arrive, Pursuit, AddForce));
+             _layerBoid, AddForce, Seek, _vel, _maxSpeed, _textEstado));
 
         //add state hunting
-        _fsm.AddState(HunterStates.Hunting, new HuntingState(_fsm));
+        _fsm.AddState(HunterStates.Hunting, new HuntingState(_fsm, _energia, transform, 
+            _radiusBoidDetection, _layerBoid, AddForce, Pursuit, Seek, _energyDrain, _energySlider, _maxEnergy, _vel, _textEstado));
 
 
 
@@ -49,22 +60,34 @@ public class HunterBehaivour : MonoBehaviour
 
     void Start()
     {
-        _meshRenderer = GetComponent<MeshRenderer>();
+        _energia = _maxEnergy;
+        _energySlider.maxValue = _maxEnergy;
+        _energySlider.value = _energia;
     }
 
     void Update()
     {
         _fsm.FakeUpdate();
+
+        if (_vel != Vector3.zero)
+        {
+            transform.forward = _vel;
+        }
+
+        transform.position = GameManager.instance.GetPosition(transform.position + _vel * Time.deltaTime);
     }
 
     #region Movement_Y_Cosas
     public Vector3 Seek(Vector3 desired)
     {
-        desired = desired.normalized;
+        //desired = desired.normalized;
+
+        desired = (desired - transform.position).normalized;
+
         desired *= _maxSpeed;
 
         Vector3 steering = desired - _vel;
-        steering = Vector3.ClampMagnitude(steering, _maxSpeed);
+        steering = Vector3.ClampMagnitude(steering, _maxForce * Time.deltaTime);
 
         return new Vector3(steering.x, 0, steering.z);
     }

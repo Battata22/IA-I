@@ -117,7 +117,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5244060634759782790}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7952bfe79c36ca34ca1b03ff3539effc, type: 3}
   m_Name: 
@@ -172,3 +172,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _vel: {x: 0, y: 0, z: 0}
+  _speed: 10
+  _waypoints:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  _radiusBoidDetection: 15
+  _layerBoid:
+    serializedVersion: 2
+    m_Bits: 512
+  _maxSpeed: 15
+  _visionRadius: 5
+  _maxForce: 10
+  _maxEnergy: 30
+  _energia: 0
+  _energyDrain: 2
+  _energySlider: {fileID: 0}

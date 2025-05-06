@@ -162,7 +162,7 @@ public class BoidBehaivour : MonoBehaviour
         desired *= _maxSpeed;
 
         Vector3 steering = desired - _velocity;
-        steering = Vector3.ClampMagnitude(steering, _maxSpeed);
+        steering = Vector3.ClampMagnitude(steering, _maxSpeed * Time.deltaTime);
 
         return new Vector3(steering.x, 0, steering.z);
     }
@@ -217,8 +217,8 @@ public class BoidBehaivour : MonoBehaviour
         else return false;
     }
 
-    [SerializeField] float _lastClosestFood = 10000;
-    [SerializeField] Vector3 _closestFood;
+    float _lastClosestFood = 10000;
+    Vector3 _closestFood;
 
     public Vector3 CalculateNearbyFood()
     {
@@ -238,15 +238,15 @@ public class BoidBehaivour : MonoBehaviour
     public bool IsBoidNearby()
     {
         var _boid = Physics.OverlapSphere(transform.position, _visionRadius, _maskBoids);
-        if (_boid != null)
+        if (_boid.Length > 1)
         {
             return true;
         }
         else return false;
     }
 
-    [SerializeField] float _lastClosestBoid = 10000;
-    [SerializeField] Vector3 _closestBoid;
+    float _lastClosestBoid = 10000;
+    Vector3 _closestBoid;
     public Vector3 CalculateNearbyBoid()
     {
         var _boids = Physics.OverlapSphere(transform.position, _visionRadius, _maskBoids);
@@ -264,7 +264,7 @@ public class BoidBehaivour : MonoBehaviour
 
     float waitRandom = 1000;
     [SerializeField] float randomSearchTime;
-    [SerializeField] Vector3 randomDir;
+    Vector3 randomDir;
 
     public Vector3 RandomDir()
     {
@@ -275,17 +275,22 @@ public class BoidBehaivour : MonoBehaviour
              float random1 = Random.Range(-GameManager.instance._width, GameManager.instance._width);
              float random2 = Random.Range(-GameManager.instance._height, GameManager.instance._height);
 
-            randomDir = new Vector3(random1, 1, random2);
+            randomDir = new Vector3(random1, 0, random2);
         }
 
         return randomDir;
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
-        if (collision.gameObject.layer == 7)
+        if (other.gameObject.layer == 7)
         {
-            Destroy(collision.gameObject);
+            Destroy(other.gameObject);
+        }
+
+        if (other.gameObject.layer == 10)
+        {
+            Destroy(gameObject);
         }
     }
 
@@ -303,6 +308,11 @@ public class BoidBehaivour : MonoBehaviour
             Gizmos.DrawWireSphere(transform.position, _visionRadius);
         }
 
+    }
+
+    private void OnDestroy()
+    {
+        GameManager.instance._myBoidsParcial.Remove(this);
     }
 
 }

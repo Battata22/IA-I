@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using static UnityEngine.EventSystems.EventTrigger;
 using static UnityEngine.ParticleSystem;
@@ -17,8 +18,7 @@ public class PatrolState : IState
     FSM _fsm;
 
     Action<Vector3> AddForce;
-    Func<Vector3, Vector3> Arrive;
-    Func<BoidBehaivour, Vector3> Pursuit;
+    Func<Vector3, Vector3> Seek;
 
 
     Transform _transform;
@@ -26,28 +26,35 @@ public class PatrolState : IState
     float _radiusBoidDetection;
     LayerMask _layerBoid;
     int _indexWaypoint;
+    Vector3 _vel;
+    float _maxSpeed;
+    [SerializeField] TextMeshProUGUI _textEstado;
+
     public PatrolState(FSM fsm, Transform transform, Transform[] waypoints, float radiusBoid,
-        LayerMask layerBoids, Func<Vector3, Vector3> arrive, Func<BoidBehaivour, Vector3> pursuit,
-        Action<Vector3> addForce)
+        LayerMask layerBoids, Action<Vector3> addForce, Func<Vector3, Vector3> seek, 
+        Vector3 velocity, float maxSpeed, TextMeshProUGUI _TextEstado)
     {
         _fsm = fsm;
         _transform = transform;
         _waypoints = waypoints;
         _radiusBoidDetection = radiusBoid;
         _layerBoid = layerBoids;
-        Arrive = arrive;
-        Pursuit = pursuit;
         AddForce = addForce;
+        Seek = seek;
+        _vel = velocity;
+        _maxSpeed = maxSpeed;
+        _textEstado = _TextEstado;
     }
 
     public void OnEnter()
     {
-
+        _textEstado.text = ("Estado Hunter: Patrol");
     }
 
     public void OnExit()
     {
-
+        _vel = Vector3.zero;
+        AddForce(Seek(_vel));
     }
 
     public void OnUpdate()
@@ -57,15 +64,19 @@ public class PatrolState : IState
 
         if (CheckNearbyBoids() != null)
         {
-            Debug.Log("estoy re cazando wacho");
+            //Debug.Log("estoy re cazando wacho");
+            _fsm.ChangeState(HunterStates.Hunting);
         }
-        
+
+        //_transform.position = GameManager.instance.GetPosition(_transform.position + _vel * Time.deltaTime);
+
     }
 
     void MoveBetweenWaypoints()
-    {
-        AddForce(Arrive(_waypoints[_indexWaypoint].position));
-        if (Vector3.Distance(_transform.position, _waypoints[_indexWaypoint].position) <= 0.1f)
+    {        
+        AddForce(Seek(_waypoints[_indexWaypoint].position));
+
+        if (Vector3.Distance(_transform.position, _waypoints[_indexWaypoint].position) <= 2f)
         {
             _indexWaypoint++;
             if (_indexWaypoint >= _waypoints.Length)
