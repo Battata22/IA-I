@@ -27,7 +27,7 @@ public class HunterBehaivour : MonoBehaviour
     [SerializeField] float _maxForce;
 
     [SerializeField] float _maxEnergy;
-    [SerializeField] float _energia;
+    public float _energy;
     [SerializeField] float _energyDrain;
 
     [SerializeField] Slider _energySlider;
@@ -41,16 +41,16 @@ public class HunterBehaivour : MonoBehaviour
         _fsm = new FSM();
 
         //add state rest
-        _fsm.AddState(HunterStates.Rest, new RestState(_fsm, _maxEnergy, _energia, transform, _radiusBoidDetection, 
-            _layerBoid, _energyDrain, _vel, _energySlider, AddForce, Seek, _textEstado));
+        _fsm.AddState(HunterStates.Rest, new RestState(_fsm, _maxEnergy, _energy, transform, _radiusBoidDetection, 
+            _layerBoid, _energyDrain, _vel, _energySlider, AddForce, Seek, _textEstado, this));
 
         //add state patrol
         _fsm.AddState(HunterStates.Patrol, new PatrolState(_fsm, transform, _waypoints, _radiusBoidDetection,
-             _layerBoid, AddForce, Seek, _vel, _maxSpeed, _textEstado));
+             _layerBoid, AddForce, Seek, _vel, _maxSpeed, _textEstado, _maxEnergy, _energy, _energyDrain, _energySlider, this));
 
         //add state hunting
-        _fsm.AddState(HunterStates.Hunting, new HuntingState(_fsm, _energia, transform, 
-            _radiusBoidDetection, _layerBoid, AddForce, Pursuit, Seek, _energyDrain, _energySlider, _maxEnergy, _vel, _textEstado));
+        _fsm.AddState(HunterStates.Hunting, new HuntingState(_fsm, _energy, transform, 
+            _radiusBoidDetection, _layerBoid, AddForce, Pursuit, Seek, _energyDrain, _energySlider, _maxEnergy, _vel, _textEstado, this));
 
 
 
@@ -60,9 +60,9 @@ public class HunterBehaivour : MonoBehaviour
 
     void Start()
     {
-        _energia = _maxEnergy;
+        _energy = _maxEnergy;
         _energySlider.maxValue = _maxEnergy;
-        _energySlider.value = _energia;
+        _energySlider.value = _energy;
     }
 
     void Update()

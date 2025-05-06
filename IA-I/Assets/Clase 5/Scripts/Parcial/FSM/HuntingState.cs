@@ -32,11 +32,12 @@ public class HuntingState : IState
     Slider _energySlider;
     float _maxEnergy;
     Vector3 _vel;
-    [SerializeField] TextMeshProUGUI _textEstado;
+    TextMeshProUGUI _textEstado;
+    HunterBehaivour _hunterScript;
 
     public HuntingState(FSM fsm, float restTime, Transform transform, float radiusBoidDetection, 
         LayerMask layerBoid, Action<Vector3> addForce, Func<BoidBehaivour, Vector3> pursuit, Func<Vector3, 
-            Vector3> seek, float energyDrain, Slider energySlider, float maxEnergy, Vector3 vel, TextMeshProUGUI _TextEstado)
+            Vector3> seek, float energyDrain, Slider energySlider, float maxEnergy, Vector3 vel, TextMeshProUGUI _TextEstado, HunterBehaivour HunterScript)
     {
         _fsm = fsm;
         _energy = restTime;
@@ -51,41 +52,39 @@ public class HuntingState : IState
         _maxEnergy = maxEnergy;
         _vel = vel;
         _textEstado = _TextEstado;
+        _hunterScript = HunterScript;
     }
     public void OnEnter()
     {
-        //empiezo a cazar
-        _energy = _maxEnergy;
         _textEstado.text = ("Estado Hunter: Hunting");
     }
 
     public void OnExit()
     {
-        //dejo de cazar
-        _vel = Vector3.zero;
-        AddForce(Seek(_vel));
+
     }
 
     public void OnUpdate()
     {
         //Debug.Log("toy hunteando loco");
 
-        if (_energy <= 0)
+        if (_hunterScript._energy <= 0)
         {
+            
             _fsm.ChangeState(HunterStates.Rest);
         }
 
         if (CheckNearbyBoids() != null)
         {
             AddForce(Seek(CalculateNearbyBoid()));
-            _energy -= _energyDrain * Time.deltaTime;
+            _hunterScript._energy -= _energyDrain * Time.deltaTime;
         }
         else
         {
             _fsm.ChangeState(HunterStates.Patrol);
         }
 
-        _energySlider.value = _energy;
+        _energySlider.value = _hunterScript._energy;
 
         //_transform.position = GameManager.instance.GetPosition(_transform.position + _vel * Time.deltaTime);
     }

@@ -27,15 +27,16 @@ public class RestState : IState
     Slider _energySlider;
     Action<Vector3> AddForce;
     Func<Vector3, Vector3> Seek;
-    [SerializeField] TextMeshProUGUI _textEstado;
+    TextMeshProUGUI _textEstado;
+    HunterBehaivour _hunterScript;
 
-    public RestState(FSM fsm, float maxEnergy, float restTime, Transform transform, float radiusBoidDetection, 
+    public RestState(FSM fsm, float maxEnergy, float Energy, Transform transform, float radiusBoidDetection, 
         LayerMask layerBoid, float energyDrain, Vector3 vel, Slider energySlider, Action<Vector3> addForce, 
-        Func<Vector3, Vector3> seek, TextMeshProUGUI _TextEstado)
+        Func<Vector3, Vector3> seek, TextMeshProUGUI _TextEstado, HunterBehaivour HunterScript)
     {
         _fsm = fsm;
         _maxEnergy = maxEnergy;
-        _energy = restTime;
+        _energy = Energy;
         _transform = transform;
         _radiusBoidDetection = radiusBoidDetection;
         _layerBoid = layerBoid;
@@ -45,13 +46,14 @@ public class RestState : IState
         AddForce = addForce;
         Seek = seek;
         _textEstado = _TextEstado;
+        _hunterScript = HunterScript;
     }
     public void OnEnter()
     {
-        _energy = 0;
+        //_energy = 0;
+        _hunterScript._energy = 0;
         //_vel = Vector3.zero;
         AddForce(Seek(_transform.position));
-        Debug.Log(_vel + "vel");
 
         _textEstado.text = ("Estado Hunter: Rest");
     }
@@ -63,9 +65,9 @@ public class RestState : IState
 
     public void OnUpdate()
     {
-        _energy += _energyDrain * Time.deltaTime * 2.5f;
+        _hunterScript._energy += _energyDrain * Time.deltaTime * 2.5f;
 
-        if(_energy >= _maxEnergy)
+        if(_hunterScript._energy >= _maxEnergy)
         {
             if (CheckNearbyBoids() != null)
             {
@@ -78,7 +80,7 @@ public class RestState : IState
             }
         }
 
-        _energySlider.value = _energy;
+        _energySlider.value = _hunterScript._energy;
 
         AddForce(Seek(_transform.position));
         //_transform.position = GameManager.instance.GetPosition(_transform.position + _vel * Time.deltaTime);

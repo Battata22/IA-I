@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public class BoidBehaivour : MonoBehaviour
 {
@@ -158,7 +159,9 @@ public class BoidBehaivour : MonoBehaviour
 
     public Vector3 Seek(Vector3 desired)
     {
-        desired = desired.normalized;
+        //desired = desired.normalized;
+        desired = (desired - transform.position).normalized;
+
         desired *= _maxSpeed;
 
         Vector3 steering = desired - _velocity;
@@ -171,7 +174,7 @@ public class BoidBehaivour : MonoBehaviour
     {
         var desired = target.transform.position + target.Vel;
 
-        return Flee(-desired);
+        return Flee(desired);
     }
 
     public Vector3 Flee(Vector3 target) => -Seek(target);

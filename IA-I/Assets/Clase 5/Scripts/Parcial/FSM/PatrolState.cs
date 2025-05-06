@@ -3,8 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 using static UnityEngine.EventSystems.EventTrigger;
-using static UnityEngine.ParticleSystem;
 
 public class PatrolState : IState
 {
@@ -28,11 +28,16 @@ public class PatrolState : IState
     int _indexWaypoint;
     Vector3 _vel;
     float _maxSpeed;
-    [SerializeField] TextMeshProUGUI _textEstado;
+    TextMeshProUGUI _textEstado;
+    float _maxEnergy;
+    float _energy;
+    float _energyDrain;
+    Slider _energySlider;
+    HunterBehaivour _hunterScript;
 
     public PatrolState(FSM fsm, Transform transform, Transform[] waypoints, float radiusBoid,
-        LayerMask layerBoids, Action<Vector3> addForce, Func<Vector3, Vector3> seek, 
-        Vector3 velocity, float maxSpeed, TextMeshProUGUI _TextEstado)
+        LayerMask layerBoids, Action<Vector3> addForce, Func<Vector3, Vector3> seek,
+        Vector3 velocity, float maxSpeed, TextMeshProUGUI _TextEstado, float MaxEnergy, float Energy, float EnergyDrain, Slider EnergySlider, HunterBehaivour HunterScript)
     {
         _fsm = fsm;
         _transform = transform;
@@ -44,6 +49,11 @@ public class PatrolState : IState
         _vel = velocity;
         _maxSpeed = maxSpeed;
         _textEstado = _TextEstado;
+        _energy = Energy;
+        _maxEnergy = MaxEnergy;
+        _energyDrain = EnergyDrain;
+        _energySlider = EnergySlider;
+        _hunterScript = HunterScript;
     }
 
     public void OnEnter()
@@ -53,13 +63,16 @@ public class PatrolState : IState
 
     public void OnExit()
     {
-        _vel = Vector3.zero;
-        AddForce(Seek(_vel));
+
     }
 
     public void OnUpdate()
     {
-        //move waypoint
+        if (_hunterScript._energy <= 0)
+        {
+            _fsm.ChangeState(HunterStates.Rest);
+        }
+
         MoveBetweenWaypoints();
 
         if (CheckNearbyBoids() != null)
@@ -68,6 +81,7 @@ public class PatrolState : IState
             _fsm.ChangeState(HunterStates.Hunting);
         }
 
+        _energySlider.value = _hunterScript._energy;
         //_transform.position = GameManager.instance.GetPosition(_transform.position + _vel * Time.deltaTime);
 
     }
@@ -84,6 +98,9 @@ public class PatrolState : IState
                 _indexWaypoint = 0;
             } 
         }
+
+        _hunterScript._energy -= _energyDrain * Time.deltaTime;
+
     }
 
     float _lastClosestBoid = 10000;
