@@ -8,6 +8,12 @@ public class ManagerParcial2 : MonoBehaviour
 
     public FOV_Target Player;
 
+    public List<Node> WhiteZone;
+    public List<Node> BlueZone;
+    public List<Node> RedZone;
+    public List<Node> YellowZone;
+
+
     private void Awake()
     {
         if (Instance == null)
