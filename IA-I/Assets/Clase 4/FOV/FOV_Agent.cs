@@ -20,7 +20,7 @@ public class FOV_Agent : FOV_Target
 
         if (dir.magnitude > _viewRange) return false;
 
-        if (Vector3.Angle(transform.forward, dir) > _viewAngle / 2) return false;
+        if (Vector3.Angle(-transform.up, dir) > _viewAngle / 2) return false;
 
         if (!InLOS(transform.position, endPos)) return false;
 
