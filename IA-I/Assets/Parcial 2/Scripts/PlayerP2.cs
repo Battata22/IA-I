@@ -11,7 +11,6 @@ public class PlayerP2 : FOV_Target
     protected override void Start()
     {
         base.Start();
-        ManagerParcial2.Instance.Player = this;
     }
 
 

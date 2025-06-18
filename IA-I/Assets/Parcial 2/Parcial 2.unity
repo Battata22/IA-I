@@ -3057,6 +3057,7 @@ MonoBehaviour:
   _viewAngle: 80
   _viewRange: 1.2
   _player: {fileID: 0}
+  _state: 0
   _speed: 0
   _maxSpeed: 0
   _velocity: {x: 0, y: 0, z: 0}
@@ -3477,6 +3478,7 @@ MonoBehaviour:
   _viewAngle: 80
   _viewRange: 1.2
   _player: {fileID: 0}
+  _state: 0
   _speed: 0
   _maxSpeed: 0
   _velocity: {x: 0, y: 0, z: 0}
@@ -3907,6 +3909,7 @@ MonoBehaviour:
   _viewAngle: 80
   _viewRange: 1.2
   _player: {fileID: 0}
+  _state: 0
   _speed: 0
   _maxSpeed: 0
   _velocity: {x: 0, y: 0, z: 0}
@@ -9549,6 +9552,7 @@ MonoBehaviour:
   _viewAngle: 83
   _viewRange: 1.2
   _player: {fileID: 0}
+  _state: 0
   _speed: 0
   _maxSpeed: 0
   _velocity: {x: 0, y: 0, z: 0}

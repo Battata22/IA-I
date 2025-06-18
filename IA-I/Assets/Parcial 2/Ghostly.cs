@@ -24,13 +24,24 @@ public class Ghostly : FOV_Agent
     protected override void Update()
     {
         //base.Update();
+        //print(inFOV(_player.transform.position) ? "true" : "false");
 
         if (inFOV(_player.transform.position))
         {
             print(gameObject.name + " ve al Player");
         }
 
-        if(_state == GhostState.Patrol)
+        if (inFOV(_player.transform.position))
+        {
+            _player.ChangeColor(Color.black);
+        }
+        else
+        {
+            _player.ChangeColor(Color.white);
+        }
+
+
+        if (_state == GhostState.Patrol)
         {
             //ir de nodo a nodo y chequear fov
         }
