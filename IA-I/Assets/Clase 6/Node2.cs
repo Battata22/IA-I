@@ -2,22 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Node : MonoBehaviour
+public class Node2 : MonoBehaviour
 {
-    List<Node> _neightborsNodes = new();
+    List<Node2> _neightborsNodes = new();
 
     int _xPos, _yPos;
 
-    Grid _myGrid;
+    Grid2 _myGrid;
 
-    public void Initialize(Grid myGrid, int x, int y)
+    public void Initialize(Grid2 myGrid, int x, int y)
     {
         _xPos = x;
         _yPos = y;
         _myGrid = myGrid;
     }
 
-    public List<Node> GetNeightbors
+    public List<Node2> GetNeightbors
     {
         get
         {

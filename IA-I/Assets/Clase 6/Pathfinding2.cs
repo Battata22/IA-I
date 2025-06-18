@@ -2,14 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Pathfinding : MonoBehaviour
+public class Pathfinding2 : MonoBehaviour
 {
-    public List<Node> CalculateBFS(Node StartNode, Node EndNode)
+    public List<Node2> CalculateBFS(Node2 StartNode, Node2 EndNode)
     {
-       var frontier = new Queue<Node>();
+       var frontier = new Queue<Node2>();
         frontier.Enqueue(StartNode);
 
-        var cameFrom = new Dictionary<Node, Node>();
+        var cameFrom = new Dictionary<Node2, Node2>();
         
         while (frontier.Count > 0)
         {
@@ -17,7 +17,7 @@ public class Pathfinding : MonoBehaviour
 
             if (current == EndNode)
             {
-                List<Node> path = new();
+                List<Node2> path = new();
                 while (current != StartNode)
                 {
                     path.Add(current);
@@ -41,7 +41,7 @@ public class Pathfinding : MonoBehaviour
             }
         }
 
-        return new List<Node>();
+        return new List<Node2>();
 
     }
 

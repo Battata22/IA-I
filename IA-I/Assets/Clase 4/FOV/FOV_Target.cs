@@ -15,11 +15,6 @@ public class FOV_Target : MonoBehaviour
         }
     }
 
-    
-    void Update()
-    {
-        
-    }
 
     public void ChangeColor(Color color)
     {

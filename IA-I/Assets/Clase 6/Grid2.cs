@@ -2,19 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Grid : MonoBehaviour
+public class Grid2 : MonoBehaviour
 {
-    [SerializeField] Node _nodeprefab;
+    [SerializeField] Node2 _nodeprefab;
     [SerializeField] int _width, _height;
     [SerializeField, Range(1,2)] float _offset;
 
-    Node[,] _grid;
+    Node2[,] _grid;
 
     //public List<Node> nodesBorrar;
 
     private void Start()
     {
-       _grid = new Node[_width, _height]; 
+       _grid = new Node2[_width, _height]; 
 
         for (int x = 0; x < _width; x++)
         {
@@ -30,7 +30,7 @@ public class Grid : MonoBehaviour
 
     }
 
-    public Node GetNode(int x, int y)
+    public Node2 GetNode(int x, int y)
     {
         if (x < 0 || y < 0 || x >= _width || y >= _height) return null;
 

@@ -5,16 +5,16 @@ using UnityEngine;
 public class FOV_Agent : FOV_Target
 {
 
-    [SerializeField] List<FOV_Target> _otherAgents = new();
+    [SerializeField] protected List<FOV_Target> _otherAgents;
 
-    [SerializeField] LayerMask _obstacle;
+    [SerializeField] protected LayerMask _obstacle;
 
-    [SerializeField, Range(5, 360)] float _viewAngle;
-    [SerializeField, Range(0.5f, 15)] float _viewRange;
+    [SerializeField, Range(5, 360)] protected float _viewAngle;
+    [SerializeField, Range(0.5f, 15)] protected float _viewRange;
 
     #region In Field Of View
     //In Field Of View
-    bool inFOV(Vector3 endPos)
+    protected bool inFOV(Vector3 endPos)
     {
         Vector3 dir = endPos - transform.position;
 
@@ -26,28 +26,28 @@ public class FOV_Agent : FOV_Target
 
 
         return true;
-    } 
+    }
     #endregion
 
     #region Line Of Sight
     //In Line Of Sight
-    bool InLOS(Vector3 start, Vector3 end)
+    protected bool InLOS(Vector3 start, Vector3 end)
     {
         Vector3 dir = end - start;
 
         return !Physics.Raycast(start, dir.normalized, dir.magnitude, _obstacle);
-    } 
+    }
     #endregion
 
 
     protected override void Start()
     {
         base.Start();
-        ChangeColor(Color.gray);
+        //ChangeColor(Color.gray);
     }
 
     
-    void Update()
+    protected virtual void Update()
     {
         foreach(var agent in _otherAgents)
         {
@@ -64,6 +64,8 @@ public class FOV_Agent : FOV_Target
             //    agent.ChangeColor(Color.white);
             //}
         }
+
+
     }
 
     private void OnDrawGizmos()
