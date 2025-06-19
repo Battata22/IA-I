@@ -10,7 +10,12 @@ public class Ghostly : FOV_Agent
     [SerializeField] float _speed;
     [SerializeField] float _maxSpeed;
     [SerializeField] public Vector3 _velocity;
+    [SerializeField] public Node[] _nodosBase;
     public Vector3 Velocity { get { return _velocity; } }
+
+    [SerializeField] Node _ultimoNodo;
+
+    [SerializeField] int _nextNode = 0;
 
     protected override void Start()
     {
@@ -23,27 +28,56 @@ public class Ghostly : FOV_Agent
 
     protected override void Update()
     {
-        //base.Update();
-        //print(inFOV(_player.transform.position) ? "true" : "false");
 
-        if (inFOV(_player.transform.position))
-        {
-            print(gameObject.name + " ve al Player");
-        }
-
+        #region Testing
         if (inFOV(_player.transform.position))
         {
             _player.ChangeColor(Color.black);
+            print(gameObject.name + " ve al Player");
         }
         else
         {
             _player.ChangeColor(Color.white);
         }
+        #endregion
+
+        transform.position = (transform.position + _velocity * Time.deltaTime);
 
 
         if (_state == GhostState.Patrol)
         {
             //ir de nodo a nodo y chequear fov
+
+            AddForce(Seek(_nodosBase[_nextNode].transform.position));
+
+            if (Vector3.Distance(transform.position, _nodosBase[_nextNode].transform.position) < 0.1f)
+            {
+                _nextNode++;
+                if (_nextNode > _nodosBase.Length - 1)
+                {
+                    _nextNode = 0;
+                }
+            }
+
+
+            //for (int i = 0; i < _nodosBase.Length; i++)
+            //{
+            //    if (Vector3.Distance(transform.position, _nodosBase[i].transform.position) <= 0.1f && i < _nodosBase.Length)
+            //    {
+            //        _nextNode = _nodosBase[i + 1];
+            //        _ultimoNodo = _nodosBase[i];
+            //        print(i);
+            //    }
+            //    else if (Vector3.Distance(transform.position, _nodosBase[i].transform.position) <= 0.2f && i >= _nodosBase.Length)
+            //    {
+            //        _nextNode = _nodosBase[0];
+            //        _ultimoNodo = _nodosBase[i];
+            //    }
+            //}
+
+            //print("haciendo seek a " + _nextNode.name);
+            //AddForce(Seek(_nextNode.transform.position));
+
         }
         else if (_state == GhostState.Following)
         {
@@ -52,6 +86,10 @@ public class Ghostly : FOV_Agent
         else if (_state == GhostState.GoingBack)
         {
             //ir al siguiente nodo del ultimo nodo que paso (si estaba en camino entre el nodo 1 al 2 entonces va al 2)
+        }
+        else if (_state == GhostState.GoingLastSeen)
+        {
+            //Hacer el camino de los nodos hasta el nodo mas cercano del punto ultima vez visto
         }
         else
         {
@@ -80,5 +118,5 @@ public class Ghostly : FOV_Agent
 
 public enum GhostState
 {
-    Patrol, Following, GoingBack
+    Patrol, Following, GoingBack, GoingLastSeen
 }

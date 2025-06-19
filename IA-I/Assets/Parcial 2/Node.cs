@@ -1,14 +1,39 @@
 using System.Collections.Generic;
 using TMPro;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class Node : MonoBehaviour
 {
     //Grid _myGrid;
     int _xPos, _yPos;
-    [SerializeField] List<Node> _neighbors = new List<Node>();
+    //[SerializeField] List<Node> _neighbors = new List<Node>();
     public int Cost { get; private set; }
+
+    [SerializeField] float _rangoScan;
+    [SerializeField] List<Node> vecinos;
+    [SerializeField] LayerMask _obstacle, _nodos;
+
+
+    void Start()
+    {
+        var nodos = Physics.OverlapSphere(transform.position, _rangoScan, _nodos);
+
+        foreach (var node in nodos)
+        {
+            //print(node.name);
+            if (InLOS(transform.position, node.transform.position) && node.name != name)
+            {
+                vecinos.Add(node.GetComponent<Node>());
+            }
+        }
+    }
+
+    protected bool InLOS(Vector3 start, Vector3 end)
+    {
+        Vector3 dir = end - start;
+
+        return !Physics.Raycast(start, dir.normalized, dir.magnitude, _obstacle);
+    }
 
 
     public void Initialize(int xPos, int yPos)
@@ -39,8 +64,24 @@ public class Node : MonoBehaviour
 
             //Por FOV o a mano
 
-            return _neighbors;
+            if (vecinos.Count > 0)
+            {
+                return vecinos;
+            }
+            else
+            {
+                return default;
+            }
+
+                //return _neighbors;
         }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.blue;
+
+        Gizmos.DrawWireSphere(transform.position, _rangoScan);
     }
 
 }
