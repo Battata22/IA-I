@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Ghostly : FOV_Agent
@@ -7,15 +8,24 @@ public class Ghostly : FOV_Agent
 
     [SerializeField] GhostState _state;
 
+    [SerializeField] GhostType _type;
+
     [SerializeField] float _speed;
     [SerializeField] float _maxSpeed;
     [SerializeField] public Vector3 _velocity;
     [SerializeField] public Node[] _nodosBase;
+    [SerializeField, Range(0, 1)] public float _visionRadius;
+    [SerializeField, Range(0, 1)] float _maxForce;
     public Vector3 Velocity { get { return _velocity; } }
 
     [SerializeField] Node _ultimoNodo;
 
     [SerializeField] int _nextNode = 0;
+
+    [SerializeField] List<Node> tempNodesFollow;
+    [SerializeField] int _indexTemp;
+
+    [SerializeField] bool canMove = true;
 
     protected override void Start()
     {
@@ -23,23 +33,59 @@ public class Ghostly : FOV_Agent
         _player = ManagerParcial2.Instance.Player;
         _path = new Pathfinding();
         _state = GhostState.Patrol;
+        //ManagerParcial2.Instance.PlayerEvent.outFOV += CallingAvengers;
+
+        #region Manager Type
+        if (_type == GhostType.White)
+        {
+            ManagerParcial2.Instance.WhiteGhost = this;
+        }
+        else if (_type == GhostType.Red)
+        {
+            ManagerParcial2.Instance.RedGhost = this;
+        }
+        else if (_type == GhostType.Blue)
+        {
+            ManagerParcial2.Instance.BlueGhost = this;
+        }
+        else if (_type == GhostType.Yellow)
+        {
+            ManagerParcial2.Instance.YellowGhost = this;
+        }
+        else
+        {
+            print("La cagaste en algun lado mamahuevaso");
+        } 
+        #endregion
+
     }
 
 
     protected override void Update()
     {
 
-        #region Testing
+        #region TestingFov
         if (inFOV(_player.transform.position))
         {
             _player.ChangeColor(Color.black);
             print(gameObject.name + " ve al Player");
+            //ManagerParcial2.Instance.PlayerEvent.inFOV = true;
+            if (!ManagerParcial2.Instance.PlayerEvent.meVen.Contains(this))
+            {
+                ManagerParcial2.Instance.PlayerEvent.meVen.Add(this);
+            }
         }
         else
         {
             _player.ChangeColor(Color.white);
+            //ManagerParcial2.Instance.PlayerEvent.inFOV = false;
+            if (ManagerParcial2.Instance.PlayerEvent.meVen.Contains(this))
+            {
+                ManagerParcial2.Instance.PlayerEvent.meVen.Remove(this);
+            }
         }
         #endregion
+
 
         transform.position = (transform.position + _velocity * Time.deltaTime);
 
@@ -48,10 +94,13 @@ public class Ghostly : FOV_Agent
         {
             //ir de nodo a nodo y chequear fov
 
-            AddForce(Seek(_nodosBase[_nextNode].transform.position));
+            //chequearFOV
+
+            AddForce(Arrive(_nodosBase[_nextNode].transform.position));
 
             if (Vector3.Distance(transform.position, _nodosBase[_nextNode].transform.position) < 0.1f)
             {
+                _ultimoNodo = _nodosBase[_nextNode];
                 _nextNode++;
                 if (_nextNode > _nodosBase.Length - 1)
                 {
@@ -60,6 +109,7 @@ public class Ghostly : FOV_Agent
             }
 
 
+            #region Comment
             //for (int i = 0; i < _nodosBase.Length; i++)
             //{
             //    if (Vector3.Distance(transform.position, _nodosBase[i].transform.position) <= 0.1f && i < _nodosBase.Length)
@@ -76,7 +126,8 @@ public class Ghostly : FOV_Agent
             //}
 
             //print("haciendo seek a " + _nextNode.name);
-            //AddForce(Seek(_nextNode.transform.position));
+            //AddForce(Seek(_nextNode.transform.position)); 
+            #endregion
 
         }
         else if (_state == GhostState.Following)
@@ -90,11 +141,36 @@ public class Ghostly : FOV_Agent
         else if (_state == GhostState.GoingLastSeen)
         {
             //Hacer el camino de los nodos hasta el nodo mas cercano del punto ultima vez visto
+
+            print("tamaño de la lista " + tempNodesFollow.Count + ". index " + _indexTemp);
+
+            if (Vector3.Distance(transform.position, tempNodesFollow[_indexTemp].transform.position) < 0.1f)
+            {                
+                _indexTemp++;
+                if (_indexTemp > tempNodesFollow.Count - 1)
+                {
+                    canMove = false;
+                    print("llegue al nodo temp");
+                }
+            }
+
+            if (canMove)
+            {
+                AddForce(Arrive(tempNodesFollow[_indexTemp].transform.position));
+            }
         }
         else
         {
             print("estoy en la mierda");
         }
+    }
+
+    public void CallingAvengers()
+    {
+        tempNodesFollow = _path.CalculateAStar(_ultimoNodo, ManagerParcial2.Instance.tempNode);
+        print(tempNodesFollow.Count);
+        _state = GhostState.GoingLastSeen;
+        print("avengers");
     }
 
     public Vector3 Seek(Vector3 desired)
@@ -110,6 +186,25 @@ public class Ghostly : FOV_Agent
         return new Vector3(steering.x, 0, steering.z);
     }
 
+    Vector3 Arrive(Vector3 target)
+    {
+        float dist = Vector3.Distance(transform.position, target);
+
+        if (dist > _visionRadius)
+        {
+            return Seek(target);
+        }
+
+        Vector3 dir = target - transform.position;
+        dir = dir.normalized;
+        dir *= _maxSpeed * (dist / _visionRadius);
+
+        Vector3 steering = dir - _velocity;
+        steering = Vector3.ClampMagnitude(steering, _maxForce);
+
+        return new Vector3(steering.x, 0, steering.z);
+    }
+
     void AddForce(Vector3 dir)
     {
         _velocity = Vector3.ClampMagnitude(_velocity + dir, _maxSpeed);
@@ -118,5 +213,10 @@ public class Ghostly : FOV_Agent
 
 public enum GhostState
 {
-    Patrol, Following, GoingBack, GoingLastSeen
+    Patrol, Following, GoingBack, GoingLastSeen, testing
+}
+
+public enum GhostType
+{
+    White, Red, Blue, Yellow
 }

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Node : MonoBehaviour
@@ -12,20 +13,87 @@ public class Node : MonoBehaviour
     [SerializeField] float _rangoScan;
     [SerializeField] List<Node> vecinos;
     [SerializeField] LayerMask _obstacle, _nodos;
+    [SerializeField] bool tempNode = false;
+    [SerializeField] bool checkForVecinos = false;
 
 
     void Start()
     {
-        var nodos = Physics.OverlapSphere(transform.position, _rangoScan, _nodos);
-
-        foreach (var node in nodos)
+        if (!tempNode)
         {
-            //print(node.name);
-            if (InLOS(transform.position, node.transform.position) && node.name != name)
+            var nodos = Physics.OverlapSphere(transform.position, _rangoScan, _nodos);
+
+            foreach (var node in nodos)
             {
-                vecinos.Add(node.GetComponent<Node>());
+                //print(node.name);
+                if (InLOS(transform.position, node.transform.position) && node.name != name)
+                {
+                    vecinos.Add(node.GetComponent<Node>());
+                }
             }
         }
+        else
+        {
+            ManagerParcial2.Instance.tempNode = this;
+        }
+    }
+
+    private void Update()
+    {
+        if (tempNode)
+        {
+            if (ManagerParcial2.Instance.PlayerEvent.meVen.Count > 0 && checkForVecinos == false)
+            {
+                var nodos = Physics.OverlapSphere(transform.position, _rangoScan, _nodos);
+
+                foreach (var node in nodos)
+                {
+                    //print(node.name);
+                    if (InLOS(transform.position, node.transform.position) && node.name != name)
+                    {
+                        vecinos.Add(node.GetComponent<Node>());
+                    }
+                }
+                checkForVecinos = true;
+                Quieto();
+            }
+            else if (ManagerParcial2.Instance.PlayerEvent.meVen.Count <= 0)
+            {
+                checkForVecinos = false;
+                vecinos.Clear();
+            }
+
+            //if (Input.GetKey(KeyCode.Space) && checkForVecinos == false)
+            //{
+            //    var nodos = Physics.OverlapSphere(transform.position, _rangoScan, _nodos);
+
+            //    foreach (var node in nodos)
+            //    {
+            //        //print(node.name);
+            //        if (InLOS(transform.position, node.transform.position) && node.name != name)
+            //        {
+            //            vecinos.Add(node.GetComponent<Node>());
+            //        }
+            //    }
+            //    checkForVecinos = true;
+            //    Quieto();
+            //}
+            //else if (!Input.GetKey(KeyCode.Space))
+            //{
+            //    checkForVecinos = false;
+            //    vecinos.Clear();
+            //}
+        }        
+    }
+
+    public void Quieto()
+    {
+        print("inicio quieto");
+        //ManagerParcial2.Instance.WhiteGhost.CallingAvengers();
+        //ManagerParcial2.Instance.RedGhost.CallingAvengers();
+        //ManagerParcial2.Instance.BlueGhost.CallingAvengers();        
+        ManagerParcial2.Instance.YellowGhost.CallingAvengers();
+        print("fin quieto");
     }
 
     protected bool InLOS(Vector3 start, Vector3 end)
@@ -35,14 +103,12 @@ public class Node : MonoBehaviour
         return !Physics.Raycast(start, dir.normalized, dir.magnitude, _obstacle);
     }
 
-
     public void Initialize(int xPos, int yPos)
     {
         _xPos = xPos;
         _yPos = yPos;
         Cost = 1;
     }
-
 
     public List<Node> GetNeighbors
     {
@@ -83,5 +149,7 @@ public class Node : MonoBehaviour
 
         Gizmos.DrawWireSphere(transform.position, _rangoScan);
     }
+
+
 
 }
