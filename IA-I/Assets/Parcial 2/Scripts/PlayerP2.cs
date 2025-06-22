@@ -7,6 +7,8 @@ public class PlayerP2 : FOV_Target
 {
 
     //public event Action outFOV;
+    public event Action FueraDeFOV;
+    public bool activarEventoFueraDeFOV = false;
     [SerializeField] Node nodeTemp;
     public List<Ghostly> meVen;
     public bool inFOV = false;
@@ -16,7 +18,9 @@ public class PlayerP2 : FOV_Target
         ManagerParcial2.Instance.Player = this;
         ManagerParcial2.Instance.PlayerEvent = this;
         //outFOV += GenerarNodoTemporal;
+        FueraDeFOV += MoveTemp;
     }
+
     protected override void Start()
     {
         base.Start();
@@ -43,10 +47,16 @@ public class PlayerP2 : FOV_Target
         //}
         #endregion
 
-        if (meVen.Count <= 0)
+        if (activarEventoFueraDeFOV)
         {
-            MoveTemp();
+            FueraDeFOV();
+            activarEventoFueraDeFOV = false;
         }
+
+        //if (meVen.Count <= 0)
+        //{
+        //    MoveTemp();
+        //}
     }
 
     void MoveTemp()

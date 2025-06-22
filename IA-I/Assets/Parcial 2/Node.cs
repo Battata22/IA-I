@@ -1,6 +1,4 @@
 using System.Collections.Generic;
-using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class Node : MonoBehaviour
@@ -35,6 +33,7 @@ public class Node : MonoBehaviour
         else
         {
             ManagerParcial2.Instance.tempNode = this;
+            ManagerParcial2.Instance.PlayerEvent.FueraDeFOV += EjecutarTempNode;
         }
     }
 
@@ -42,27 +41,28 @@ public class Node : MonoBehaviour
     {
         if (tempNode)
         {
-            if (ManagerParcial2.Instance.PlayerEvent.meVen.Count > 0 && checkForVecinos == false)
-            {
-                var nodos = Physics.OverlapSphere(transform.position, _rangoScan, _nodos);
+            //if (ManagerParcial2.Instance.PlayerEvent.meVen.Count > 0 && checkForVecinos == false)
+            //{
+            //    var nodos = Physics.OverlapSphere(transform.position, _rangoScan, _nodos);
 
-                foreach (var node in nodos)
-                {
-                    //print(node.name);
-                    if (InLOS(transform.position, node.transform.position) && node.name != name)
-                    {
-                        vecinos.Add(node.GetComponent<Node>());
-                    }
-                }
-                checkForVecinos = true;
-                Quieto();
-            }
-            else if (ManagerParcial2.Instance.PlayerEvent.meVen.Count <= 0)
-            {
-                checkForVecinos = false;
-                vecinos.Clear();
-            }
+            //    foreach (var node in nodos)
+            //    {
+            //        //print(node.name);
+            //        if (InLOS(transform.position, node.transform.position) && node.name != name)
+            //        {
+            //            vecinos.Add(node.GetComponent<Node>());
+            //        }
+            //    }
+            //    checkForVecinos = true;
+            //    Quieto();
+            //}
+            //else if (ManagerParcial2.Instance.PlayerEvent.meVen.Count <= 0)
+            //{
+            //    checkForVecinos = false;
+            //    vecinos.Clear();
+            //}
 
+            #region Testing
             //if (Input.GetKey(KeyCode.Space) && checkForVecinos == false)
             //{
             //    var nodos = Physics.OverlapSphere(transform.position, _rangoScan, _nodos);
@@ -82,18 +82,61 @@ public class Node : MonoBehaviour
             //{
             //    checkForVecinos = false;
             //    vecinos.Clear();
-            //}
-        }        
+            //} 
+            #endregion
+        }
+    }
+
+    public void EjecutarTempNode()
+    {
+
+        vecinos.Clear();
+
+        var nodos = Physics.OverlapSphere(transform.position, _rangoScan, _nodos);
+
+        foreach (var node in nodos)
+        {            
+            if (InLOS(transform.position, node.transform.position) && node.name != name)
+            {
+                vecinos.Add(node.GetComponent<Node>());
+            }
+        }
+
+        Quieto();
+
+        #region Etc
+        //if (checkForVecinos == false)
+        //{
+        //    var nodos = Physics.OverlapSphere(transform.position, _rangoScan, _nodos);
+
+        //    foreach (var node in nodos)
+        //    {
+        //        //print(node.name);
+        //        if (InLOS(transform.position, node.transform.position) && node.name != name)
+        //        {
+        //            vecinos.Add(node.GetComponent<Node>());
+        //        }
+        //    }
+        //    checkForVecinos = true;
+        //    Quieto();
+        //}
+        //else if (ManagerParcial2.Instance.PlayerEvent.meVen.Count <= 0)
+        //{
+        //    checkForVecinos = false;
+        //    vecinos.Clear();
+        //}
+        #endregion
+
     }
 
     public void Quieto()
     {
-        print("inicio quieto");
-        //ManagerParcial2.Instance.WhiteGhost.CallingAvengers();
-        //ManagerParcial2.Instance.RedGhost.CallingAvengers();
-        //ManagerParcial2.Instance.BlueGhost.CallingAvengers();        
+        //print("inicio quieto");
+        ManagerParcial2.Instance.WhiteGhost.CallingAvengers();
+        ManagerParcial2.Instance.RedGhost.CallingAvengers();
+        ManagerParcial2.Instance.BlueGhost.CallingAvengers();
         ManagerParcial2.Instance.YellowGhost.CallingAvengers();
-        print("fin quieto");
+        //print("fin quieto");
     }
 
     protected bool InLOS(Vector3 start, Vector3 end)
@@ -139,7 +182,7 @@ public class Node : MonoBehaviour
                 return default;
             }
 
-                //return _neighbors;
+            //return _neighbors;
         }
     }
 

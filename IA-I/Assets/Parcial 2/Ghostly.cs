@@ -70,25 +70,30 @@ public class Ghostly : FOV_Agent
             _player.ChangeColor(Color.black);
             print(gameObject.name + " ve al Player");
             //ManagerParcial2.Instance.PlayerEvent.inFOV = true;
-            if (!ManagerParcial2.Instance.PlayerEvent.meVen.Contains(this))
-            {
-                ManagerParcial2.Instance.PlayerEvent.meVen.Add(this);
-            }
+            //if (!ManagerParcial2.Instance.PlayerEvent.meVen.Contains(this))
+            //{
+            //    ManagerParcial2.Instance.PlayerEvent.meVen.Add(this);
+            //}
         }
         else
         {
             _player.ChangeColor(Color.white);
             //ManagerParcial2.Instance.PlayerEvent.inFOV = false;
-            if (ManagerParcial2.Instance.PlayerEvent.meVen.Contains(this))
-            {
-                ManagerParcial2.Instance.PlayerEvent.meVen.Remove(this);
-            }
+            //if (ManagerParcial2.Instance.PlayerEvent.meVen.Contains(this))
+            //{
+            //    ManagerParcial2.Instance.PlayerEvent.meVen.Remove(this);
+            //}
         }
         #endregion
 
 
         transform.position = (transform.position + _velocity * Time.deltaTime);
+        transform.forward = _velocity;
 
+        if (inFOV(_player.transform.position) && _state != GhostState.Following)
+        {
+            _state = GhostState.Following;
+        }
 
         if (_state == GhostState.Patrol)
         {
@@ -133,31 +138,49 @@ public class Ghostly : FOV_Agent
         else if (_state == GhostState.Following)
         {
             //seek al player mientras este en el fov
+
+            FollowPlayer(_player.transform.position);
+
+            if (!inFOV(_player.transform.position) && _state == GhostState.Following)
+            {
+                ManagerParcial2.Instance.PlayerEvent.activarEventoFueraDeFOV = true;
+                _state = GhostState.GoingLastSeen;
+            }
         }
         else if (_state == GhostState.GoingBack)
         {
             //ir al siguiente nodo del ultimo nodo que paso (si estaba en camino entre el nodo 1 al 2 entonces va al 2)
+
+            VolverABase();
+
+            AddForce(Arrive(tempNodesFollow[_indexTemp].transform.position));
+
         }
         else if (_state == GhostState.GoingLastSeen)
         {
             //Hacer el camino de los nodos hasta el nodo mas cercano del punto ultima vez visto
 
-            print("tamaño de la lista " + tempNodesFollow.Count + ". index " + _indexTemp);
+            //print("tamaño de la lista " + tempNodesFollow.Count + ". index " + _indexTemp);
+
+            AddForce(Arrive(tempNodesFollow[_indexTemp].transform.position));
 
             if (Vector3.Distance(transform.position, tempNodesFollow[_indexTemp].transform.position) < 0.1f)
             {                
                 _indexTemp++;
+
                 if (_indexTemp > tempNodesFollow.Count - 1)
                 {
-                    canMove = false;
+                    //canMove = false;
                     print("llegue al nodo temp");
+                    //hacer GoinBack
+                    _state = GhostState.GoingBack;
                 }
             }
 
-            if (canMove)
-            {
-                AddForce(Arrive(tempNodesFollow[_indexTemp].transform.position));
-            }
+            //if (canMove)
+            //{
+            //    AddForce(Arrive(tempNodesFollow[_indexTemp].transform.position));
+            //}
         }
         else
         {
@@ -167,10 +190,27 @@ public class Ghostly : FOV_Agent
 
     public void CallingAvengers()
     {
-        tempNodesFollow = _path.CalculateAStar(_ultimoNodo, ManagerParcial2.Instance.tempNode);
-        print(tempNodesFollow.Count);
+        tempNodesFollow = _path.CalculateAStar(_nodosBase[_nextNode], ManagerParcial2.Instance.tempNode);
+        //print(tempNodesFollow.Count);
         _state = GhostState.GoingLastSeen;
-        print("avengers");
+        //print("avengers");
+    }
+
+    bool calculoPathVolver = false;
+    public void VolverABase()
+    {
+        calculoPathVolver = false;
+        if (!calculoPathVolver)
+        {
+            tempNodesFollow = _path.CalculateAStar(ManagerParcial2.Instance.tempNode, _ultimoNodo);
+            calculoPathVolver = true;
+            print(tempNodesFollow.Count);
+        }
+    }
+
+    public void FollowPlayer(Vector3 playerPos)
+    {
+        AddForce(Arrive(playerPos));
     }
 
     public Vector3 Seek(Vector3 desired)
