@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class Node : MonoBehaviour
@@ -17,6 +18,8 @@ public class Node : MonoBehaviour
 
     void Start()
     {
+        _nodoMasCercano = 100000;
+
         if (!tempNode)
         {
             var nodos = Physics.OverlapSphere(transform.position, _rangoScan, _nodos);
@@ -87,20 +90,56 @@ public class Node : MonoBehaviour
         }
     }
 
+    public float _nodoMasCercano = 100000;
+    Node _nodoMasCercanoNode;
     public void EjecutarTempNode()
     {
+        if (_nodoMasCercanoNode != null)
+        {
+            _nodoMasCercanoNode.vecinos.Remove(this);
+        }
 
         vecinos.Clear();
 
         var nodos = Physics.OverlapSphere(transform.position, _rangoScan, _nodos);
 
-        foreach (var node in nodos)
-        {            
-            if (InLOS(transform.position, node.transform.position) && node.name != name)
+        //foreach (var node in nodos)
+        //{            
+        //    if (InLOS(transform.position, node.transform.position) && node.name != name)
+        //    {
+        //        if (_nodoMasCercano > Vector3.Distance(node.transform.position, transform.position))
+        //        {
+        //            _nodoMasCercano = Vector3.Distance(node.transform.position, transform.position);
+        //            print("distancia seteada a " + Vector3.Distance(node.transform.position, transform.position));
+        //            //_nodoMasCercanoCollider = node;
+        //        }                
+        //    }
+        //}
+
+        for (int i = 0; i < nodos.Length; i++)
+        {
+            if (InLOS(transform.position, nodos[i].transform.position) && nodos[i].name != name)
             {
-                vecinos.Add(node.GetComponent<Node>());
+                vecinos.Add(nodos[i].GetComponent<Node>());
             }
         }
+        for (int i = 0; i < vecinos.Count; i++)
+        {
+            if (i == 0)
+            {
+                _nodoMasCercanoNode = vecinos[i];
+            }
+            if (Vector3.Distance(_nodoMasCercanoNode.transform.position, transform.position) > Vector3.Distance(vecinos[i].transform.position, transform.position))
+            {
+                _nodoMasCercanoNode = vecinos[i];
+            }
+        }
+
+        vecinos.Clear();
+
+        vecinos.Add(_nodoMasCercanoNode.GetComponent<Node>());
+
+        _nodoMasCercanoNode.vecinos.Add(this);
 
         Quieto();
 

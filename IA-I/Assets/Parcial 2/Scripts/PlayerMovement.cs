@@ -1,19 +1,15 @@
 using UnityEngine;
 
-    [RequireComponent(typeof(CharacterController))]
-
 public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] float _speed;
     [SerializeField] int _hp;
-    [SerializeField] CharacterController _cc;
     float xAxis, yAxis;
 
     Vector3 _direccion;
 
     void Start()
     {
-        _cc = GetComponent<CharacterController>();
     }
 
 
@@ -32,7 +28,8 @@ public class PlayerMovement : MonoBehaviour
         _direccion.x = dir.x;
         _direccion.z = dir.z;
 
-        _cc.Move(_direccion * Time.fixedDeltaTime * _speed);
+        //_cc.Move(_direccion * Time.fixedDeltaTime * _speed);
+        transform.position += (_direccion * _speed * Time.deltaTime);
     }
 }
 

@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -69,4 +68,5 @@ public class PlayerP2 : FOV_Target
     //    var node = Instantiate(nodePrefab, new Vector3(transform.position.x, 0.1512671f, transform.position.z), Quaternion.identity);
     //    node.Temporal();
     //}
+
 }

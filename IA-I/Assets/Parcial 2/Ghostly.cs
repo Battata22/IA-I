@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Ghostly : FOV_Agent
 {
@@ -26,6 +27,30 @@ public class Ghostly : FOV_Agent
     [SerializeField] int _indexTemp;
 
     [SerializeField] bool canMove = true;
+
+    FSMGhosty _fsm;
+
+    private void Awake()
+    {
+        _fsm = new FSMGhosty();
+
+        //add state Following
+        _fsm.AddState(GhostState.Following, new GhostPatrolState(_fsm, transform, AddForce, Arrive, _nodosBase, _nextNode, _ultimoNodo));
+
+        //add state Patrol
+        _fsm.AddState(GhostState.Patrol, new GhostPatrolState(_fsm, transform, AddForce, Arrive, _nodosBase, _nextNode, _ultimoNodo));
+
+        //add state GoingBack
+        _fsm.AddState(GhostState.GoingBack, new GhostPatrolState(_fsm, transform, AddForce, Arrive, _nodosBase, _nextNode, _ultimoNodo));
+
+        //add state GoingLastSeen
+        _fsm.AddState(GhostState.GoingLastSeen, new GhostPatrolState(_fsm, transform, AddForce, Arrive, _nodosBase, _nextNode, _ultimoNodo));
+
+
+
+        //default
+        _fsm.ChangeState(GhostState.Patrol);
+    }
 
     protected override void Start()
     {
@@ -60,9 +85,11 @@ public class Ghostly : FOV_Agent
 
     }
 
-
+    public float waitTimer, timer;
     protected override void Update()
     {
+
+        waitTimer += Time.deltaTime;
 
         #region TestingFov
         if (inFOV(_player.transform.position))
@@ -138,8 +165,14 @@ public class Ghostly : FOV_Agent
         else if (_state == GhostState.Following)
         {
             //seek al player mientras este en el fov
-
             FollowPlayer(_player.transform.position);
+
+            //alertar a los demas de la pos del player
+            if (waitTimer >= timer)
+            {
+                ManagerParcial2.Instance.PlayerEvent.activarEventoFueraDeFOV = true;
+                waitTimer = 0;
+            }
 
             if (!inFOV(_player.transform.position) && _state == GhostState.Following)
             {
@@ -151,9 +184,18 @@ public class Ghostly : FOV_Agent
         {
             //ir al siguiente nodo del ultimo nodo que paso (si estaba en camino entre el nodo 1 al 2 entonces va al 2)
 
-            VolverABase();
-
             AddForce(Arrive(tempNodesFollow[_indexTemp].transform.position));
+
+            if (Vector3.Distance(transform.position, tempNodesFollow[_indexTemp].transform.position) < 0.1f)
+            {
+                _indexTemp++;
+
+                if (_indexTemp >= tempNodesFollow.Count)
+                {
+                    _state = GhostState.Patrol;
+                    _nextNode = 1;
+                }
+            }
 
         }
         else if (_state == GhostState.GoingLastSeen)
@@ -170,17 +212,23 @@ public class Ghostly : FOV_Agent
 
                 if (_indexTemp > tempNodesFollow.Count - 1)
                 {
+                    #region Comment
                     //canMove = false;
-                    print("llegue al nodo temp");
-                    //hacer GoinBack
+                    //print("llegue al nodo temp");
+                    //hacer GoinBack 
+                    #endregion
+                    _indexTemp--;
                     _state = GhostState.GoingBack;
+                    VolverABase();
                 }
             }
 
+            #region Comment
             //if (canMove)
             //{
             //    AddForce(Arrive(tempNodesFollow[_indexTemp].transform.position));
-            //}
+            //} 
+            #endregion
         }
         else
         {
@@ -190,10 +238,13 @@ public class Ghostly : FOV_Agent
 
     public void CallingAvengers()
     {
-        tempNodesFollow = _path.CalculateAStar(_nodosBase[_nextNode], ManagerParcial2.Instance.tempNode);
-        //print(tempNodesFollow.Count);
-        _state = GhostState.GoingLastSeen;
-        //print("avengers");
+        if (_state != GhostState.Following)
+        {
+            tempNodesFollow = _path.CalculateAStar(_nodosBase[_nextNode], ManagerParcial2.Instance.tempNode);
+            //print(tempNodesFollow.Count);
+            _state = GhostState.GoingLastSeen;
+            //print("avengers");
+        }
     }
 
     bool calculoPathVolver = false;
@@ -202,7 +253,8 @@ public class Ghostly : FOV_Agent
         calculoPathVolver = false;
         if (!calculoPathVolver)
         {
-            tempNodesFollow = _path.CalculateAStar(ManagerParcial2.Instance.tempNode, _ultimoNodo);
+            _indexTemp = 0;
+            tempNodesFollow = _path.CalculateAStar(ManagerParcial2.Instance.tempNode, _nodosBase[0]);
             calculoPathVolver = true;
             print(tempNodesFollow.Count);
         }
@@ -249,6 +301,14 @@ public class Ghostly : FOV_Agent
     {
         _velocity = Vector3.ClampMagnitude(_velocity + dir, _maxSpeed);
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.name == "Hijo")
+        {
+            SceneManager.LoadScene(0);
+        } 
+    }
 }
 
 public enum GhostState
@@ -260,3 +320,4 @@ public enum GhostType
 {
     White, Red, Blue, Yellow
 }
+
