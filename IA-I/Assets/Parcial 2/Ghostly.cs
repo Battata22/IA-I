@@ -7,7 +7,7 @@ public class Ghostly : FOV_Agent
     Pathfinding _path;
     [SerializeField] FOV_Target _player;
 
-    [SerializeField] GhostState _state;
+    public GhostState _state;
 
     [SerializeField] GhostType _type;
 
@@ -19,12 +19,12 @@ public class Ghostly : FOV_Agent
     [SerializeField, Range(0, 1)] float _maxForce;
     public Vector3 Velocity { get { return _velocity; } }
 
-    [SerializeField] Node _ultimoNodo;
+    public Node _ultimoNodo;
 
-    [SerializeField] int _nextNode = 0;
+    public int _nextNode = 0;
 
-    [SerializeField] List<Node> tempNodesFollow;
-    [SerializeField] int _indexTemp;
+    public List<Node> tempNodesFollow;
+    public int _indexTemp;
 
     [SerializeField] bool canMove = true;
 
@@ -35,16 +35,16 @@ public class Ghostly : FOV_Agent
         _fsm = new FSMGhosty();
 
         //add state Following
-        _fsm.AddState(GhostState.Following, new GhostPatrolState(_fsm, transform, AddForce, Arrive, _nodosBase, _nextNode, _ultimoNodo));
+        _fsm.AddState(GhostState.Following, new GhostFollowingState(_fsm, transform, FollowPlayer/*, waitTimer*/, timer, _viewAngle, _viewRange, _obstacle, inFOV, _type));
 
         //add state Patrol
-        _fsm.AddState(GhostState.Patrol, new GhostPatrolState(_fsm, transform, AddForce, Arrive, _nodosBase, _nextNode, _ultimoNodo));
+        _fsm.AddState(GhostState.Patrol, new GhostPatrolState(_fsm, transform, AddForce, Arrive, _nodosBase, /*_nextNode, _ultimoNodo*/ _type));
 
         //add state GoingBack
-        _fsm.AddState(GhostState.GoingBack, new GhostPatrolState(_fsm, transform, AddForce, Arrive, _nodosBase, _nextNode, _ultimoNodo));
+        _fsm.AddState(GhostState.GoingBack, new GhostGoingBackState(_fsm, transform, AddForce, Arrive, /*tempNodesFollow, _indexTemp, _nextNode*/ _type));
 
         //add state GoingLastSeen
-        _fsm.AddState(GhostState.GoingLastSeen, new GhostPatrolState(_fsm, transform, AddForce, Arrive, _nodosBase, _nextNode, _ultimoNodo));
+        _fsm.AddState(GhostState.GoingLastSeen, new GhostGoingLastSeenState(_fsm, transform, AddForce, Arrive, /*tempNodesFollow, _indexTemp, _nextNode,*/ VolverABase, _type));
 
 
 
@@ -88,9 +88,21 @@ public class Ghostly : FOV_Agent
     public float waitTimer, timer;
     protected override void Update()
     {
-
+        //Timer
         waitTimer += Time.deltaTime;
 
+        //Movimiento Siempre
+        transform.position = (transform.position + _velocity * Time.deltaTime);
+        transform.forward = _velocity;
+
+        //Deteccion constante del player
+        if (inFOV(_player.transform.position) && _state != GhostState.Following)
+        {
+            _fsm.ChangeState(GhostState.Following);
+
+            //_state = GhostState.Following;
+        }
+        
         #region TestingFov
         if (inFOV(_player.transform.position))
         {
@@ -113,127 +125,121 @@ public class Ghostly : FOV_Agent
         }
         #endregion
 
+        //FSM
+        _fsm.FakeUpdate();
 
-        transform.position = (transform.position + _velocity * Time.deltaTime);
-        transform.forward = _velocity;
+        //if (_state == GhostState.Patrol)//------------------------------------------------------------------------------------------------------------
+        //{
+        //    //ir de nodo a nodo y chequear fov
 
-        if (inFOV(_player.transform.position) && _state != GhostState.Following)
-        {
-            _state = GhostState.Following;
-        }
+        //    //chequearFOV
 
-        if (_state == GhostState.Patrol)
-        {
-            //ir de nodo a nodo y chequear fov
+        //    AddForce(Arrive(_nodosBase[_nextNode].transform.position));
 
-            //chequearFOV
-
-            AddForce(Arrive(_nodosBase[_nextNode].transform.position));
-
-            if (Vector3.Distance(transform.position, _nodosBase[_nextNode].transform.position) < 0.1f)
-            {
-                _ultimoNodo = _nodosBase[_nextNode];
-                _nextNode++;
-                if (_nextNode > _nodosBase.Length - 1)
-                {
-                    _nextNode = 0;
-                }
-            }
+        //    if (Vector3.Distance(transform.position, _nodosBase[_nextNode].transform.position) < 0.1f)
+        //    {
+        //        _ultimoNodo = _nodosBase[_nextNode];
+        //        _nextNode++;
+        //        if (_nextNode > _nodosBase.Length - 1)
+        //        {
+        //            _nextNode = 0;
+        //        }
+        //    }
 
 
-            #region Comment
-            //for (int i = 0; i < _nodosBase.Length; i++)
-            //{
-            //    if (Vector3.Distance(transform.position, _nodosBase[i].transform.position) <= 0.1f && i < _nodosBase.Length)
-            //    {
-            //        _nextNode = _nodosBase[i + 1];
-            //        _ultimoNodo = _nodosBase[i];
-            //        print(i);
-            //    }
-            //    else if (Vector3.Distance(transform.position, _nodosBase[i].transform.position) <= 0.2f && i >= _nodosBase.Length)
-            //    {
-            //        _nextNode = _nodosBase[0];
-            //        _ultimoNodo = _nodosBase[i];
-            //    }
-            //}
+        //    #region Comment
+        //    //for (int i = 0; i < _nodosBase.Length; i++)
+        //    //{
+        //    //    if (Vector3.Distance(transform.position, _nodosBase[i].transform.position) <= 0.1f && i < _nodosBase.Length)
+        //    //    {
+        //    //        _nextNode = _nodosBase[i + 1];
+        //    //        _ultimoNodo = _nodosBase[i];
+        //    //        print(i);
+        //    //    }
+        //    //    else if (Vector3.Distance(transform.position, _nodosBase[i].transform.position) <= 0.2f && i >= _nodosBase.Length)
+        //    //    {
+        //    //        _nextNode = _nodosBase[0];
+        //    //        _ultimoNodo = _nodosBase[i];
+        //    //    }
+        //    //}
 
-            //print("haciendo seek a " + _nextNode.name);
-            //AddForce(Seek(_nextNode.transform.position)); 
-            #endregion
+        //    //print("haciendo seek a " + _nextNode.name);
+        //    //AddForce(Seek(_nextNode.transform.position)); 
+        //    #endregion
 
-        }
-        else if (_state == GhostState.Following)
-        {
-            //seek al player mientras este en el fov
-            FollowPlayer(_player.transform.position);
+        //}
+        //else if (_state == GhostState.Following)//------------------------------------------------------------------------------------------------------------
+        //{
+        //    //seek al player mientras este en el fov
+        //    FollowPlayer(_player.transform.position);
 
-            //alertar a los demas de la pos del player
-            if (waitTimer >= timer)
-            {
-                ManagerParcial2.Instance.PlayerEvent.activarEventoFueraDeFOV = true;
-                waitTimer = 0;
-            }
+        //    //alertar a los demas de la pos del player
+        //    if (waitTimer >= timer)
+        //    {
+        //        ManagerParcial2.Instance.PlayerEvent.activarEventoFueraDeFOV = true;
+        //        waitTimer = 0;
+        //    }
 
-            if (!inFOV(_player.transform.position) && _state == GhostState.Following)
-            {
-                ManagerParcial2.Instance.PlayerEvent.activarEventoFueraDeFOV = true;
-                _state = GhostState.GoingLastSeen;
-            }
-        }
-        else if (_state == GhostState.GoingBack)
-        {
-            //ir al siguiente nodo del ultimo nodo que paso (si estaba en camino entre el nodo 1 al 2 entonces va al 2)
+        //    if (!inFOV(_player.transform.position) && _state == GhostState.Following)
+        //    {
+        //        ManagerParcial2.Instance.PlayerEvent.activarEventoFueraDeFOV = true;
+        //        _state = GhostState.GoingLastSeen;
+        //    }
+        //}
+        //else if (_state == GhostState.GoingBack)//-------------------------------------------------------------------------------------------------------------
+        //{
+        //    //ir al siguiente nodo del ultimo nodo que paso (si estaba en camino entre el nodo 1 al 2 entonces va al 2)
 
-            AddForce(Arrive(tempNodesFollow[_indexTemp].transform.position));
+        //    AddForce(Arrive(tempNodesFollow[_indexTemp].transform.position));
 
-            if (Vector3.Distance(transform.position, tempNodesFollow[_indexTemp].transform.position) < 0.1f)
-            {
-                _indexTemp++;
+        //    if (Vector3.Distance(transform.position, tempNodesFollow[_indexTemp].transform.position) < 0.1f)
+        //    {
+        //        _indexTemp++;
 
-                if (_indexTemp >= tempNodesFollow.Count)
-                {
-                    _state = GhostState.Patrol;
-                    _nextNode = 1;
-                }
-            }
+        //        if (_indexTemp >= tempNodesFollow.Count)
+        //        {
+        //            _state = GhostState.Patrol;
+        //            _nextNode = 1;
+        //        }
+        //    }
 
-        }
-        else if (_state == GhostState.GoingLastSeen)
-        {
-            //Hacer el camino de los nodos hasta el nodo mas cercano del punto ultima vez visto
+        //}
+        //else if (_state == GhostState.GoingLastSeen)//------------------------------------------------------------------------------------------------------------
+        //{
+        //    //Hacer el camino de los nodos hasta el nodo mas cercano del punto ultima vez visto
 
-            //print("tamaño de la lista " + tempNodesFollow.Count + ". index " + _indexTemp);
+        //    //print("tamaño de la lista " + tempNodesFollow.Count + ". index " + _indexTemp);
 
-            AddForce(Arrive(tempNodesFollow[_indexTemp].transform.position));
+        //    AddForce(Arrive(tempNodesFollow[_indexTemp].transform.position));
 
-            if (Vector3.Distance(transform.position, tempNodesFollow[_indexTemp].transform.position) < 0.1f)
-            {                
-                _indexTemp++;
+        //    if (Vector3.Distance(transform.position, tempNodesFollow[_indexTemp].transform.position) < 0.1f)
+        //    {                
+        //        _indexTemp++;
 
-                if (_indexTemp > tempNodesFollow.Count - 1)
-                {
-                    #region Comment
-                    //canMove = false;
-                    //print("llegue al nodo temp");
-                    //hacer GoinBack 
-                    #endregion
-                    _indexTemp--;
-                    _state = GhostState.GoingBack;
-                    VolverABase();
-                }
-            }
+        //        if (_indexTemp > tempNodesFollow.Count - 1)
+        //        {
+        //            #region Comment
+        //            //canMove = false;
+        //            //print("llegue al nodo temp");
+        //            //hacer GoinBack 
+        //            #endregion
+        //            _indexTemp--;
+        //            _state = GhostState.GoingBack;
+        //            VolverABase();
+        //        }
+        //    }
 
-            #region Comment
-            //if (canMove)
-            //{
-            //    AddForce(Arrive(tempNodesFollow[_indexTemp].transform.position));
-            //} 
-            #endregion
-        }
-        else
-        {
-            print("estoy en la mierda");
-        }
+        //    #region Comment
+        //    //if (canMove)
+        //    //{
+        //    //    AddForce(Arrive(tempNodesFollow[_indexTemp].transform.position));
+        //    //} 
+        //    #endregion
+        //}
+        //else
+        //{
+        //    print("estoy en la mierda");
+        //}
     }
 
     public void CallingAvengers()
@@ -241,8 +247,11 @@ public class Ghostly : FOV_Agent
         if (_state != GhostState.Following)
         {
             tempNodesFollow = _path.CalculateAStar(_nodosBase[_nextNode], ManagerParcial2.Instance.tempNode);
-            //print(tempNodesFollow.Count);
-            _state = GhostState.GoingLastSeen;
+            print(tempNodesFollow.Count);
+            _fsm.ChangeState(GhostState.GoingLastSeen);
+
+            //_state = GhostState.GoingLastSeen;
+
             //print("avengers");
         }
     }
