@@ -810,7 +810,7 @@ MonoBehaviour:
   Player: {fileID: 0}
   PlayerEvent: {fileID: 0}
   nodoTest: {fileID: 0}
-  FSM: 0
+  FSM: 1
   WhiteGhost: {fileID: 0}
   RedGhost: {fileID: 0}
   BlueGhost: {fileID: 0}

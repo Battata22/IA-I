@@ -317,7 +317,8 @@ public class GhostGoingLastSeenState : IState
 
     public void OnEnter()
     {
-
+        //if (CheckMyType(_type)._state != GhostState.GoingLastSeen)
+        //CheckMyType(_type)._indexTemp = 0;
     }
 
     public void OnUpdate()
