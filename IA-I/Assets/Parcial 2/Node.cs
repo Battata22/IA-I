@@ -104,15 +104,15 @@ public class Node : MonoBehaviour
         var nodos = Physics.OverlapSphere(transform.position, _rangoScan, _nodos);
 
         //foreach (var node in nodos)
-        //{            
+        //{
         //    if (InLOS(transform.position, node.transform.position) && node.name != name)
         //    {
         //        if (_nodoMasCercano > Vector3.Distance(node.transform.position, transform.position))
         //        {
         //            _nodoMasCercano = Vector3.Distance(node.transform.position, transform.position);
         //            print("distancia seteada a " + Vector3.Distance(node.transform.position, transform.position));
-        //            //_nodoMasCercanoCollider = node;
-        //        }                
+        //            _nodoMasCercanoNode = node.GetComponent<Node>();
+        //        }
         //    }
         //}
 

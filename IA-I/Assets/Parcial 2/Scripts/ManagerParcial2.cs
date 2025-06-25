@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class ManagerParcial2 : MonoBehaviour
 {
@@ -10,6 +11,8 @@ public class ManagerParcial2 : MonoBehaviour
     public FOV_Target Player;
     public PlayerP2 PlayerEvent;
     public Node nodoTest;
+
+    public bool FSM = false;
 
     public Ghostly WhiteGhost;
     public Ghostly RedGhost;
@@ -22,6 +25,8 @@ public class ManagerParcial2 : MonoBehaviour
     public List<Node> YellowZone;
 
     public Node tempNode;
+
+    public Toggle FSMCheckBox;
 
 
     private void Awake()
@@ -43,4 +48,5 @@ public class ManagerParcial2 : MonoBehaviour
             SceneManager.LoadScene(0);
         }
     }
+
 }
