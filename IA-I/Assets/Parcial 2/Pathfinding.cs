@@ -152,6 +152,55 @@ public class Pathfinding
     //    }
     //    return new List<Node>();
     //} 
+
+    //public List<Node> CalculateAStarWONodes(Node startNode, Node goalNode)
+    //{
+    //    var frontier = new PriorityQueue<Node>();
+    //    frontier.Enqueue(startNode, 0);
+    //    var cameFrom = new Dictionary<Node, Node>();
+    //    var costSoFar = new Dictionary<Node, int>();
+    //    costSoFar.Add(startNode, 0);
+
+    //    while (frontier.Count > 0)
+    //    {
+    //        var current = frontier.Dequeue();
+
+    //        if (current == goalNode)
+    //        {
+    //            List<Node> path = new List<Node>();
+
+    //            while (current != startNode)
+    //            {
+    //                path.Add(current);
+    //                current = cameFrom[current];
+    //            }
+
+    //            path.Add(current);
+    //            path.Reverse();
+    //            return path;
+    //        }
+
+    //        foreach (var node in current.GetNeighbors)
+    //        {
+    //            int newCost = costSoFar[current] + node.Cost;
+    //            int priority = newCost + Heuristic(node.transform.position, goalNode.transform.position);
+
+    //            if (!costSoFar.ContainsKey(node))
+    //            {
+    //                costSoFar.Add(node, newCost);
+    //                frontier.Enqueue(node, priority);
+    //                cameFrom.Add(node, current);
+    //            }
+    //            else if (costSoFar[node] > newCost)
+    //            {
+    //                frontier.Enqueue(node, priority);
+    //                cameFrom[node] = current;
+    //                costSoFar[node] = newCost;
+    //            }
+    //        }
+    //    }
+    //    return new List<Node>();
+    //}
     #endregion
 
     public List<Node> CalculateAStar(Node startNode, Node goalNode)
@@ -180,7 +229,7 @@ public class Pathfinding
                 path.Reverse();
                 return path;
             }
-
+            Debug.Log(current);
             foreach (var node in current.GetNeighbors)
             {
                 int newCost = costSoFar[current] + node.Cost;
@@ -203,71 +252,23 @@ public class Pathfinding
         return new List<Node>();
     }
 
-    public List<Node> CalculateAStarWONodes(Node startNode, Node goalNode)
+    public List<Node> CalculateThetaStar(Node startNode, Node goalNode)
     {
-        var frontier = new PriorityQueue<Node>();
-        frontier.Enqueue(startNode, 0);
-        var cameFrom = new Dictionary<Node, Node>();
-        var costSoFar = new Dictionary<Node, int>();
-        costSoFar.Add(startNode, 0);
+        var listNode = CalculateAStar(startNode, goalNode);
 
-        while (frontier.Count > 0)
+        int currentCount = 0;
+
+        while (currentCount + 2 < listNode.Count)
         {
-            var current = frontier.Dequeue();
-
-            if (current == goalNode)
-            {
-                List<Node> path = new List<Node>();
-
-                while (current != startNode)
-                {
-                    path.Add(current);
-                    current = cameFrom[current];
-                }
-
-                path.Add(current);
-                path.Reverse();
-                return path;
-            }
-
-            foreach (var node in current.GetNeighbors)
-            {
-                int newCost = costSoFar[current] + node.Cost;
-                int priority = newCost + Heuristic(node.transform.position, goalNode.transform.position);
-
-                if (!costSoFar.ContainsKey(node))
-                {
-                    costSoFar.Add(node, newCost);
-                    frontier.Enqueue(node, priority);
-                    cameFrom.Add(node, current);
-                }
-                else if (costSoFar[node] > newCost)
-                {
-                    frontier.Enqueue(node, priority);
-                    cameFrom[node] = current;
-                    costSoFar[node] = newCost;
-                }
-            }
+            if (PathfindingGameManager.instance.InLOS(listNode[currentCount].transform.position, listNode[currentCount + 2].transform.position))
+                listNode.RemoveAt(currentCount + 1);
+            else
+                currentCount++;
         }
-        return new List<Node>();
+        return listNode;
     }
 
     #region Comment
-    //public List<Node> CalculateThetaStar(Node startNode, Node goalNode)
-    //{
-    //    var listNode = CalculateAStar(startNode, goalNode);
-
-    //    int currentCount = 0;
-
-    //    while(currentCount + 2 < listNode.Count)
-    //    {
-    //        if (PathfindingGameManager.instance.InLOS(listNode[currentCount].transform.position, listNode[currentCount + 2].transform.position))
-    //            listNode.RemoveAt(currentCount + 1);
-    //        else
-    //            currentCount++;
-    //    }
-    //    return listNode;
-    //}
 
     //public IEnumerator CalculateBFSCoroutine(Node startNode, Node goalNode)
     //{
