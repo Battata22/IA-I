@@ -2,11 +2,14 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MouseManager : MonoBehaviour
 {
     public static event Action OnClick0Event;
     public static event Action OnClick1Event;
+    public static event Action RefreshSearchNaranja;
+    public static event Action RefreshSearchCeleste;
 
     public Node _tempNodeNaranja;
     public Node _tempNodeCeleste;
@@ -39,12 +42,23 @@ public class MouseManager : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             OnClick0Event();
+            RefreshSearchNaranja();
+            _jefeNaranja.ResetIndex();
         }
 
         //Team Celeste
         if (Input.GetMouseButtonDown(1))
         {
             OnClick1Event();
+            RefreshSearchCeleste();
+            _jefeCeleste.ResetIndex();
+        }
+
+        //--------------------------------------------
+
+        if (Input.GetKeyUp(KeyCode.R))
+        {
+            SceneManager.LoadScene(0);
         }
     }
 
@@ -74,6 +88,8 @@ public class MouseManager : MonoBehaviour
         {
             _tempNodeCeleste.transform.position = new Vector3(hit.point.x, 0, hit.point.z);
         }
+
+        _tempNodeCeleste.EjecutarTempNode();
 
         _jefeCeleste.GoToClick();
     }

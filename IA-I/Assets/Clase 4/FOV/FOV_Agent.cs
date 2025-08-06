@@ -54,7 +54,7 @@ public class FOV_Agent : FOV_Target
         foreach(var agent in _otherAgents)
         {
             //Manera Resumida Pregunta ? Condicion para True : Condicion para False
-            agent.ChangeColor(inFOV(agent.transform.position) ? Color.red : Color.white);
+            //agent.ChangeColor(inFOV(agent.transform.position) ? Color.red : Color.white);
 
             //Manera Tradicional
             //if (inFOV(agent.transform.position))

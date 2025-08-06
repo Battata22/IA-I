@@ -10,7 +10,7 @@ public class Node : MonoBehaviour
     [SerializeField] float _rangoScan;
     [SerializeField] List<Node> vecinos;
     [SerializeField] LayerMask _obstacle, _nodos;
-    [SerializeField] bool tempNode = false;
+    public bool tempNode = false;
     [SerializeField] bool checkForVecinos = false;
 
 

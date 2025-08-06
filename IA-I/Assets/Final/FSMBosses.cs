@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.ProBuilder;
 
 public class FSMBosses : MonoBehaviour
 {
@@ -32,7 +34,6 @@ public class FSMBosses : MonoBehaviour
 
 public class BossIdleState : IState
 {
-    FSMBosses _fsm;
     JefesBehaviour _jefesBehaviourScript;
 
     public BossIdleState(JefesBehaviour jefesBehaviour)
@@ -47,7 +48,7 @@ public class BossIdleState : IState
 
     public void OnUpdate()
     {
-        
+        //Debug.Log("Boss State Idle");
     }
 
     public void OnExit()
@@ -121,118 +122,119 @@ public class BossIdleState : IState
 public class BossAttackingState : IState
 {
     FSMBosses _fsm;
-    Transform _transform;
-    //Action<Vector3> _followPlayer;
-    [SerializeField, Range(5, 360)] float _viewAngle;
-    [SerializeField, Range(0.5f, 15)] float _viewRange;
-    LayerMask _obstacle;
-    Func<Vector3, bool> _inFOV;
+    JefesBehaviour _jefeScript;
+    List<FOV_Target> _otherAgents;
+    GameObject _target;
+    float _targetDistance = 10000;
 
-    public BossAttackingState(FSMBosses fsm, Transform Transform, /*Action<Vector3> FollowPlayer,*/ float ViewAngle, float ViewRange,
-        LayerMask obstacle, Func<Vector3, bool> inFOV)
+    public BossAttackingState(FSMBosses fsm, JefesBehaviour jefeScript, List<FOV_Target> otherAgents)
     {
         _fsm = fsm;
-        _transform = Transform;
-        //_followPlayer = FollowPlayer;
-        _viewAngle = ViewAngle;
-        _viewRange = ViewRange;
-        _obstacle = obstacle;
-        _inFOV = inFOV;
+        _jefeScript = jefeScript;
+        _otherAgents = otherAgents;
     }
 
 
     public void OnEnter()
     {
-
+        _jefeScript._velocity = Vector3.zero;
+        _target = null;
+        _targetDistance = 10000;
     }
 
     public void OnUpdate()
     {
-        ////seek al player mientras este en el fov
-        //_followPlayer(ManagerParcial2.Instance.Player.transform.position);
 
-        ////alertar a los demas de la pos del player
-        //if (CheckMyType(_type).waitTimer >= _timer)
-        //{
-        //    ManagerParcial2.Instance.PlayerEvent.activarEventoFueraDeFOV = true;
-        //    CheckMyType(_type).waitTimer = 0;
-        //}
+        if (_jefeScript.CheckForEnemiesNearby())
+        {
+            foreach (var agent in _otherAgents)
+            {
+                if (Vector3.Distance(agent.transform.position, _jefeScript.transform.position) <= _targetDistance)
+                {
+                    _targetDistance = Vector3.Distance(agent.transform.position, _jefeScript.transform.position);
+                    _target = agent.gameObject;
+                }
+            }
 
-        //if (!_inFOV(ManagerParcial2.Instance.Player.transform.position) && /*_state*/ CheckMyType(_type)._state == GhostState.Following)
-        //{
-        //    ManagerParcial2.Instance.PlayerEvent.activarEventoFueraDeFOV = true;
+            _jefeScript.Shoot(_target);
 
-        //    _fsm.ChangeState(GhostState.GoingLastSeen);
-        //    //_state = GhostState.GoingLastSeen;
-        //}
+            Debug.Log("Boss State Attacking");
+        }
+        else
+        {
+            _fsm.ChangeState(BossState.Idle);
+        }
+
     }
 
     public void OnExit()
     {
-
+        
     }
 
 }
 
 //------------------------------------------------------------------------------------------------------------------------------------------------------
 
-public class BossRunningState : IState
-{
-    FSMBosses _fsm;
-    Transform _transform;
-    //Action<Vector3> _followPlayer;
-    [SerializeField, Range(5, 360)] float _viewAngle;
-    [SerializeField, Range(0.5f, 15)] float _viewRange;
-    LayerMask _obstacle;
-    Func<Vector3, bool> _inFOV;
+#region Running
+//public class BossRunningState : IState
+//{
+//    FSMBosses _fsm;
+//    Transform _transform;
+//    //Action<Vector3> _followPlayer;
+//    [SerializeField, Range(5, 360)] float _viewAngle;
+//    [SerializeField, Range(0.5f, 15)] float _viewRange;
+//    LayerMask _obstacle;
+//    Func<Vector3, bool> _inFOV;
 
-    public BossRunningState(FSMBosses fsm, Transform Transform, /*Action<Vector3> FollowPlayer,*/ float ViewAngle, float ViewRange,
-        LayerMask obstacle, Func<Vector3, bool> inFOV)
-    {
-        _fsm = fsm;
-        _transform = Transform;
-        //_followPlayer = FollowPlayer;
-        _viewAngle = ViewAngle;
-        _viewRange = ViewRange;
-        _obstacle = obstacle;
-        _inFOV = inFOV;
-    }
+//    public BossRunningState(FSMBosses fsm, Transform Transform, /*Action<Vector3> FollowPlayer,*/ float ViewAngle, float ViewRange,
+//        LayerMask obstacle, Func<Vector3, bool> inFOV)
+//    {
+//        _fsm = fsm;
+//        _transform = Transform;
+//        //_followPlayer = FollowPlayer;
+//        _viewAngle = ViewAngle;
+//        _viewRange = ViewRange;
+//        _obstacle = obstacle;
+//        _inFOV = inFOV;
+//    }
 
 
-    public void OnEnter()
-    {
+//    public void OnEnter()
+//    {
 
-    }
+//    }
 
-    public void OnUpdate()
-    {
-        ////seek al player mientras este en el fov
-        //_followPlayer(ManagerParcial2.Instance.Player.transform.position);
+//    public void OnUpdate()
+//    {
+//        ////seek al player mientras este en el fov
+//        //_followPlayer(ManagerParcial2.Instance.Player.transform.position);
 
-        ////alertar a los demas de la pos del player
-        //if (CheckMyType(_type).waitTimer >= _timer)
-        //{
-        //    ManagerParcial2.Instance.PlayerEvent.activarEventoFueraDeFOV = true;
-        //    CheckMyType(_type).waitTimer = 0;
-        //}
+//        ////alertar a los demas de la pos del player
+//        //if (CheckMyType(_type).waitTimer >= _timer)
+//        //{
+//        //    ManagerParcial2.Instance.PlayerEvent.activarEventoFueraDeFOV = true;
+//        //    CheckMyType(_type).waitTimer = 0;
+//        //}
 
-        //if (!_inFOV(ManagerParcial2.Instance.Player.transform.position) && /*_state*/ CheckMyType(_type)._state == GhostState.Following)
-        //{
-        //    ManagerParcial2.Instance.PlayerEvent.activarEventoFueraDeFOV = true;
+//        //if (!_inFOV(ManagerParcial2.Instance.Player.transform.position) && /*_state*/ CheckMyType(_type)._state == GhostState.Following)
+//        //{
+//        //    ManagerParcial2.Instance.PlayerEvent.activarEventoFueraDeFOV = true;
 
-        //    _fsm.ChangeState(GhostState.GoingLastSeen);
-        //    //_state = GhostState.GoingLastSeen;
-        //}
-    }
+//        //    _fsm.ChangeState(GhostState.GoingLastSeen);
+//        //    //_state = GhostState.GoingLastSeen;
+//        //}
+//    }
 
-    public void OnExit()
-    {
+//    public void OnExit()
+//    {
 
-    }
+//    }
 
-}
+//}
+#endregion
 
-//------------------------------------------------------------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------------------------------------------------------------------ 
 
 public class BossGoingToClickState : IState
 {

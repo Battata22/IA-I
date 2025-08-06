@@ -229,7 +229,6 @@ public class Pathfinding
                 path.Reverse();
                 return path;
             }
-            Debug.Log(current);
             foreach (var node in current.GetNeighbors)
             {
                 int newCost = costSoFar[current] + node.Cost;

@@ -1,13 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
-using UnityEngine.UIElements;
 
-public class JefesBehaviour : FOV_Agent
+public class JefesBehaviour : FOV_Agent, IDamageable, IBoidFinal
 {
-    [SerializeField] BossTeam _team;
+    public BossTeam _team;
     [SerializeField] Node _tempNodeNaranja;
     [SerializeField] Node _tempNodeCeleste;
+
+    [SerializeField] int _life;
+    [SerializeField] int _maxLife = 100;
 
     Pathfinding _path;
     FSMBosses _fsm;
@@ -27,25 +30,28 @@ public class JefesBehaviour : FOV_Agent
     public List<Node> tempNodesFollow;
     public int _indexTemp;
 
+    [SerializeField] BulletBehaviour _bullet;
+    [SerializeField] float _shootCooldown;
+
+    [SerializeField] TextMeshProUGUI _textGameOver;
+
     private void Awake()
     {
         _fsm = new FSMBosses();
 
-        //add state Following
+        //add state Idle
         _fsm.AddState(BossState.Idle, new BossIdleState(this));
 
-        //add state Patrol
+        //add state GoToClick
         _fsm.AddState(BossState.GoingToClick, new BossGoingToClickState(_indexTemp, GoToTempNode));
 
-        //add state GoingBack
-        _fsm.AddState(BossState.Attacking, new BossAttackingState(_fsm, transform, _viewAngle, _viewRange, _obstacle ,inFOV));
-
-        //add state GoingLastSeen
-        _fsm.AddState(BossState.Running, new BossRunningState(_fsm, transform, _viewAngle, _viewRange, _obstacle, inFOV));
-
+        //add state Attacking
+        _fsm.AddState(BossState.Attacking, new BossAttackingState(_fsm, this, _otherAgents));
 
         //default
         _fsm.ChangeState(BossState.Idle);
+
+        _life = _maxLife;
     }
 
     protected override void Start()
@@ -54,7 +60,6 @@ public class JefesBehaviour : FOV_Agent
         _state = BossState.Idle;
     }
 
-
     protected override void Update()
     {
         //Movimiento Siempre
@@ -62,7 +67,18 @@ public class JefesBehaviour : FOV_Agent
         transform.forward = _velocity;
 
         _fsm.FakeUpdate();
+
+        foreach (var agent in _otherAgents)
+        {
+            if (inFOV(agent.transform.position))
+            {
+                //print(gameObject.name + " esta viendo a " + agent);
+                _fsm.ChangeState(BossState.Attacking);
+            }
+        }
     }
+
+    //-----------------------------------------------
 
     public void GoToClick()
     {
@@ -76,12 +92,12 @@ public class JefesBehaviour : FOV_Agent
         }
         else if (_team == BossTeam.celeste)
         {
-            print("test celeste");
             tempNodesFollow = _path.CalculateThetaStar(GetClosestNode(), _tempNodeCeleste);
+            _fsm.ChangeState(BossState.GoingToClick);
         }
     }
 
-    LayerMask _nodosLayer = 11;
+    //-----------------------------------------------
 
     Node GetClosestNode()
     {
@@ -92,9 +108,8 @@ public class JefesBehaviour : FOV_Agent
 
         foreach (var nodo in nodosCercanos)
         {
-            if (Vector3.Distance(nodo.transform.position, transform.position) < distNodoMasCercano && nodo.GetComponent<Node>())
+            if (Vector3.Distance(nodo.transform.position, transform.position) < distNodoMasCercano && nodo.GetComponent<Node>() && nodo.GetComponent<Node>().tempNode == false)
             {
-                print(nodo.name);
                 distNodoMasCercano = Vector3.Distance(nodo.transform.position, transform.position);
                 nodoMasCercano = nodo.GetComponent<Node>();
             }
@@ -102,6 +117,8 @@ public class JefesBehaviour : FOV_Agent
 
         return nodoMasCercano;
     }
+
+    //-----------------------------------------------
 
     void GoToTempNode()
     {
@@ -118,6 +135,91 @@ public class JefesBehaviour : FOV_Agent
         }
     }
 
+    //-----------------------------------------------
+
+    public void ResetIndex()
+    {
+        _indexTemp = 0;
+    }
+
+    //-----------------------------------------------
+
+    [SerializeField] float _waitShoot;
+    public void Shoot(GameObject target)
+    {
+        _waitShoot += Time.deltaTime;
+
+        if (target != null && _waitShoot >= _shootCooldown)
+        {
+            var bala = Instantiate(_bullet, transform.position, Quaternion.LookRotation(target.transform.position - transform.position));
+
+            if (_team == BossTeam.naranja)
+            {
+                bala.team = BalaTeam.Naranja;
+            }
+            else if (_team == BossTeam.celeste)
+            {
+                bala.team = BalaTeam.Celeste;
+            }
+
+            _waitShoot = 0;
+        }
+    }
+
+    //-----------------------------------------------
+
+    public bool CheckForEnemiesNearby()
+    {
+        bool alguien = false;
+
+        foreach (var agent in _otherAgents)
+        {
+            if (inFOV(agent.transform.position))
+            {
+                alguien = true;
+            }
+        }
+
+        return alguien;
+    }
+
+    //-----------------------------------------------
+    
+    public Transform GetTransform()
+    {
+        return transform;
+    }
+
+    //-----------------------------------------------
+
+    public GameObject GetGameObject()
+    {
+        return gameObject;
+    }
+
+    //-----------------------------------------------
+
+    public void TakeDamage(int damage)
+    {
+        _life -= damage;
+
+        if (_life <= 0)
+        {
+            //Game over para el team x
+            print(gameObject.name + " murio");
+            Time.timeScale = 0;
+
+            if (_team == BossTeam.naranja)
+            {
+                _textGameOver.text = "Gana el equipo Celeste";
+            }
+            else if (_team == BossTeam.celeste)
+            {
+                _textGameOver.text = "Gana el equipo Naranja";
+            }
+            _textGameOver.enabled = true;
+        }
+    }
 
     public Vector3 Seek(Vector3 desired)
     {
@@ -166,4 +268,9 @@ public enum BossTeam
 public enum BossState
 {
     GoingToClick, Idle, Running, Attacking
+}
+
+public interface IDamageable
+{
+    public void TakeDamage(int damage);
 }

@@ -114,7 +114,7 @@ public class Ghostly : FOV_Agent
         #region TestingFov
         if (inFOV(_player.transform.position))
         {
-            _player.ChangeColor(Color.black);
+            //_player.ChangeColor(Color.black);
             print(gameObject.name + " ve al Player");
             //ManagerParcial2.Instance.PlayerEvent.inFOV = true;
             //if (!ManagerParcial2.Instance.PlayerEvent.meVen.Contains(this))
@@ -124,7 +124,7 @@ public class Ghostly : FOV_Agent
         }
         else
         {
-            _player.ChangeColor(Color.white);
+            //_player.ChangeColor(Color.white);
             //ManagerParcial2.Instance.PlayerEvent.inFOV = false;
             //if (ManagerParcial2.Instance.PlayerEvent.meVen.Contains(this))
             //{
