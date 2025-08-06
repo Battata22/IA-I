@@ -35,23 +35,38 @@ public class JefesBehaviour : FOV_Agent, IDamageable, IBoidFinal
 
     [SerializeField] TextMeshProUGUI _textGameOver;
 
+    //-----------------------Daño--------------------------------
+
+    public Renderer _myRenderer;
+    public Material _matBase, _matDano;
+    public float _damageAnimationTime;
+
+    //-----------------------Feedback--------------------------------
+
+    public Material _matAttacking;
+    public Material _matGoing;
+
     private void Awake()
     {
+        _life = _maxLife;
+
+        _myRenderer = GetComponent<Renderer>();
+
+        //-----------------------------------------------------------------------------------------
+
         _fsm = new FSMBosses();
 
         //add state Idle
         _fsm.AddState(BossState.Idle, new BossIdleState(this));
 
         //add state GoToClick
-        _fsm.AddState(BossState.GoingToClick, new BossGoingToClickState(_indexTemp, GoToTempNode));
+        _fsm.AddState(BossState.GoingToClick, new BossGoingToClickState(this, _indexTemp, GoToTempNode));
 
         //add state Attacking
         _fsm.AddState(BossState.Attacking, new BossAttackingState(_fsm, this, _otherAgents));
 
         //default
         _fsm.ChangeState(BossState.Idle);
-
-        _life = _maxLife;
     }
 
     protected override void Start()
@@ -201,6 +216,8 @@ public class JefesBehaviour : FOV_Agent, IDamageable, IBoidFinal
 
     public void TakeDamage(int damage)
     {
+        StartCoroutine(DamageAnimation());
+
         _life -= damage;
 
         if (_life <= 0)
@@ -211,15 +228,28 @@ public class JefesBehaviour : FOV_Agent, IDamageable, IBoidFinal
 
             if (_team == BossTeam.naranja)
             {
+                StopCoroutine(DamageAnimation());
                 _textGameOver.text = "Gana el equipo Celeste";
             }
             else if (_team == BossTeam.celeste)
             {
+                StopCoroutine(DamageAnimation());
                 _textGameOver.text = "Gana el equipo Naranja";
             }
             _textGameOver.enabled = true;
         }
     }
+
+    //-----------------------------------------------
+
+    IEnumerator DamageAnimation()
+    {
+        _myRenderer.material = _matDano;
+        yield return new WaitForSeconds(_damageAnimationTime);
+        _myRenderer.material = _matBase;
+    }
+
+    //-----------------------------------------------
 
     public Vector3 Seek(Vector3 desired)
     {

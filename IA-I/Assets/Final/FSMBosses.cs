@@ -44,6 +44,7 @@ public class BossIdleState : IState
     public void OnEnter()
     {
         _jefesBehaviourScript._velocity = Vector3.zero;
+        _jefesBehaviourScript._myRenderer.material = _jefesBehaviourScript._matBase;
     }
 
     public void OnUpdate()
@@ -53,7 +54,7 @@ public class BossIdleState : IState
 
     public void OnExit()
     {
-
+        _jefesBehaviourScript._myRenderer.material = _jefesBehaviourScript._matBase;
     }
 
 }
@@ -140,6 +141,7 @@ public class BossAttackingState : IState
         _jefeScript._velocity = Vector3.zero;
         _target = null;
         _targetDistance = 10000;
+        _jefeScript._myRenderer.material = _jefeScript._matAttacking;
     }
 
     public void OnUpdate()
@@ -169,7 +171,7 @@ public class BossAttackingState : IState
 
     public void OnExit()
     {
-        
+        _jefeScript._myRenderer.material = _jefeScript._matBase;
     }
 
 }
@@ -242,8 +244,10 @@ public class BossGoingToClickState : IState
 
     int _indexTemp;
     Action _goToTempNode;
-    public BossGoingToClickState(int indexTemp, Action goToTempNode)
+    JefesBehaviour _jefeScript;
+    public BossGoingToClickState(JefesBehaviour jefeScript, int indexTemp, Action goToTempNode)
     {
+        _jefeScript = jefeScript;
         _indexTemp = indexTemp;
         _goToTempNode = goToTempNode;
     }
@@ -251,6 +255,7 @@ public class BossGoingToClickState : IState
     public void OnEnter()
     {
         _indexTemp = 0;
+        _jefeScript._myRenderer.material = _jefeScript._matGoing;
     }
 
     public void OnUpdate()
@@ -287,7 +292,7 @@ public class BossGoingToClickState : IState
 
     public void OnExit()
     {
-
+        _jefeScript._myRenderer.material = _jefeScript._matBase;
     }
 
 }

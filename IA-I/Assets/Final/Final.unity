@@ -136,6 +136,7 @@ GameObject:
   - component: {fileID: 71751}
   - component: {fileID: 71750}
   - component: {fileID: 71754}
+  - component: {fileID: 71755}
   m_Layer: 19
   m_Name: ParedDeContencion (2)
   m_TagString: Untagged
@@ -256,6 +257,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &71755
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 71749}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f62ec54f4602b3a4ba4ae795ac1cb146, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &44513121
 GameObject:
   m_ObjectHideFlags: 0
@@ -662,11 +675,20 @@ MonoBehaviour:
   _nextNode: 0
   tempNodesFollow: []
   _indexTemp: 0
+  _myRenderer: {fileID: 0}
+  _matBase: {fileID: 2100000, guid: 21b405630e40e954faede28ef20d9cb0, type: 2}
+  _matDano: {fileID: 2100000, guid: 85c6c8e4b11782c40bf274a8c6d910bf, type: 2}
+  _damageAnimationTime: 0.15
+  _matAttacking: {fileID: 2100000, guid: 3eb4f8874ff4125499a37d5aca6b12ef, type: 2}
+  _matFloking: {fileID: 2100000, guid: e2417fe81a8ddc643943c7c7dd7cf461, type: 2}
+  _matLooking: {fileID: 2100000, guid: 7a457173413173c4fa00c0059c1ac8f1, type: 2}
+  _matRunning: {fileID: 2100000, guid: 0e441676e6dc96a49b9ebbc4421d9024, type: 2}
   _bullet: {fileID: 794717006307749250, guid: 4805f0a82c79add4ab1377462768aec5, type: 3}
   _shootCooldown: 1
   _waitShoot: 1
   _sphereCastRadius: 0.03
   _maxOAForce: 3.46
+  ObstacleActivo: 1
 --- !u!1 &74835946
 GameObject:
   m_ObjectHideFlags: 0
@@ -1737,11 +1759,20 @@ MonoBehaviour:
   _nextNode: 0
   tempNodesFollow: []
   _indexTemp: 0
+  _myRenderer: {fileID: 0}
+  _matBase: {fileID: 2100000, guid: f888d2c09e604b44f826ac9cf890f946, type: 2}
+  _matDano: {fileID: 2100000, guid: 85c6c8e4b11782c40bf274a8c6d910bf, type: 2}
+  _damageAnimationTime: 0.15
+  _matAttacking: {fileID: 2100000, guid: 6e205e96cdfb75d4a896a4632cc34b8b, type: 2}
+  _matFloking: {fileID: 2100000, guid: 1b83b190ec0e0eb4397ffda424431367, type: 2}
+  _matLooking: {fileID: 2100000, guid: 33a2737ae21dae64086ca5ca8845dac8, type: 2}
+  _matRunning: {fileID: 2100000, guid: 13b4e788124854a4898ef6a84cfc41bc, type: 2}
   _bullet: {fileID: 794717006307749250, guid: 4805f0a82c79add4ab1377462768aec5, type: 3}
   _shootCooldown: 1
   _waitShoot: 1
   _sphereCastRadius: 0.03
   _maxOAForce: 3.46
+  ObstacleActivo: 1
 --- !u!1 &224941983
 GameObject:
   m_ObjectHideFlags: 0
@@ -1755,6 +1786,7 @@ GameObject:
   - component: {fileID: 224941985}
   - component: {fileID: 224941984}
   - component: {fileID: 224941988}
+  - component: {fileID: 224941989}
   m_Layer: 19
   m_Name: ParedDeContencion (1)
   m_TagString: Untagged
@@ -1875,6 +1907,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &224941989
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 224941983}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f62ec54f4602b3a4ba4ae795ac1cb146, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &254983120
 GameObject:
   m_ObjectHideFlags: 0
@@ -1888,6 +1932,7 @@ GameObject:
   - component: {fileID: 254983122}
   - component: {fileID: 254983121}
   - component: {fileID: 254983125}
+  - component: {fileID: 254983126}
   m_Layer: 19
   m_Name: ParedDeContencion (4)
   m_TagString: Untagged
@@ -2008,6 +2053,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &254983126
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 254983120}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f62ec54f4602b3a4ba4ae795ac1cb146, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &285852129
 GameObject:
   m_ObjectHideFlags: 0
@@ -3112,11 +3169,20 @@ MonoBehaviour:
   _nextNode: 0
   tempNodesFollow: []
   _indexTemp: 0
+  _myRenderer: {fileID: 0}
+  _matBase: {fileID: 2100000, guid: 21b405630e40e954faede28ef20d9cb0, type: 2}
+  _matDano: {fileID: 2100000, guid: 85c6c8e4b11782c40bf274a8c6d910bf, type: 2}
+  _damageAnimationTime: 0.15
+  _matAttacking: {fileID: 2100000, guid: 3eb4f8874ff4125499a37d5aca6b12ef, type: 2}
+  _matFloking: {fileID: 2100000, guid: e2417fe81a8ddc643943c7c7dd7cf461, type: 2}
+  _matLooking: {fileID: 2100000, guid: 7a457173413173c4fa00c0059c1ac8f1, type: 2}
+  _matRunning: {fileID: 2100000, guid: 0e441676e6dc96a49b9ebbc4421d9024, type: 2}
   _bullet: {fileID: 794717006307749250, guid: 4805f0a82c79add4ab1377462768aec5, type: 3}
   _shootCooldown: 1
   _waitShoot: 1
   _sphereCastRadius: 0.03
   _maxOAForce: 3.46
+  ObstacleActivo: 1
 --- !u!1 &435976709
 GameObject:
   m_ObjectHideFlags: 0
@@ -4315,11 +4381,20 @@ MonoBehaviour:
   _nextNode: 0
   tempNodesFollow: []
   _indexTemp: 0
+  _myRenderer: {fileID: 0}
+  _matBase: {fileID: 2100000, guid: 21b405630e40e954faede28ef20d9cb0, type: 2}
+  _matDano: {fileID: 2100000, guid: 85c6c8e4b11782c40bf274a8c6d910bf, type: 2}
+  _damageAnimationTime: 0.15
+  _matAttacking: {fileID: 2100000, guid: 3eb4f8874ff4125499a37d5aca6b12ef, type: 2}
+  _matFloking: {fileID: 2100000, guid: e2417fe81a8ddc643943c7c7dd7cf461, type: 2}
+  _matLooking: {fileID: 2100000, guid: 7a457173413173c4fa00c0059c1ac8f1, type: 2}
+  _matRunning: {fileID: 2100000, guid: 0e441676e6dc96a49b9ebbc4421d9024, type: 2}
   _bullet: {fileID: 794717006307749250, guid: 4805f0a82c79add4ab1377462768aec5, type: 3}
   _shootCooldown: 1
   _waitShoot: 1
   _sphereCastRadius: 0.03
   _maxOAForce: 3.46
+  ObstacleActivo: 1
 --- !u!1 &526711999
 GameObject:
   m_ObjectHideFlags: 0
@@ -4472,11 +4547,20 @@ MonoBehaviour:
   _nextNode: 0
   tempNodesFollow: []
   _indexTemp: 0
+  _myRenderer: {fileID: 0}
+  _matBase: {fileID: 2100000, guid: f888d2c09e604b44f826ac9cf890f946, type: 2}
+  _matDano: {fileID: 2100000, guid: 85c6c8e4b11782c40bf274a8c6d910bf, type: 2}
+  _damageAnimationTime: 0.15
+  _matAttacking: {fileID: 2100000, guid: 6e205e96cdfb75d4a896a4632cc34b8b, type: 2}
+  _matFloking: {fileID: 2100000, guid: 1b83b190ec0e0eb4397ffda424431367, type: 2}
+  _matLooking: {fileID: 2100000, guid: 33a2737ae21dae64086ca5ca8845dac8, type: 2}
+  _matRunning: {fileID: 2100000, guid: 13b4e788124854a4898ef6a84cfc41bc, type: 2}
   _bullet: {fileID: 794717006307749250, guid: 4805f0a82c79add4ab1377462768aec5, type: 3}
   _shootCooldown: 1
   _waitShoot: 1
   _sphereCastRadius: 0.03
   _maxOAForce: 3.46
+  ObstacleActivo: 1
 --- !u!1 &570518292
 GameObject:
   m_ObjectHideFlags: 0
@@ -4843,11 +4927,20 @@ MonoBehaviour:
   _nextNode: 0
   tempNodesFollow: []
   _indexTemp: 0
+  _myRenderer: {fileID: 0}
+  _matBase: {fileID: 2100000, guid: 21b405630e40e954faede28ef20d9cb0, type: 2}
+  _matDano: {fileID: 2100000, guid: 85c6c8e4b11782c40bf274a8c6d910bf, type: 2}
+  _damageAnimationTime: 0.15
+  _matAttacking: {fileID: 2100000, guid: 3eb4f8874ff4125499a37d5aca6b12ef, type: 2}
+  _matFloking: {fileID: 2100000, guid: e2417fe81a8ddc643943c7c7dd7cf461, type: 2}
+  _matLooking: {fileID: 2100000, guid: 7a457173413173c4fa00c0059c1ac8f1, type: 2}
+  _matRunning: {fileID: 2100000, guid: 0e441676e6dc96a49b9ebbc4421d9024, type: 2}
   _bullet: {fileID: 794717006307749250, guid: 4805f0a82c79add4ab1377462768aec5, type: 3}
   _shootCooldown: 1
   _waitShoot: 1
   _sphereCastRadius: 0.03
   _maxOAForce: 3.46
+  ObstacleActivo: 1
 --- !u!1 &647812697
 GameObject:
   m_ObjectHideFlags: 0
@@ -5077,11 +5170,20 @@ MonoBehaviour:
   _nextNode: 0
   tempNodesFollow: []
   _indexTemp: 0
+  _myRenderer: {fileID: 0}
+  _matBase: {fileID: 2100000, guid: 21b405630e40e954faede28ef20d9cb0, type: 2}
+  _matDano: {fileID: 2100000, guid: 85c6c8e4b11782c40bf274a8c6d910bf, type: 2}
+  _damageAnimationTime: 0.15
+  _matAttacking: {fileID: 2100000, guid: 3eb4f8874ff4125499a37d5aca6b12ef, type: 2}
+  _matFloking: {fileID: 2100000, guid: e2417fe81a8ddc643943c7c7dd7cf461, type: 2}
+  _matLooking: {fileID: 2100000, guid: 7a457173413173c4fa00c0059c1ac8f1, type: 2}
+  _matRunning: {fileID: 2100000, guid: 0e441676e6dc96a49b9ebbc4421d9024, type: 2}
   _bullet: {fileID: 794717006307749250, guid: 4805f0a82c79add4ab1377462768aec5, type: 3}
   _shootCooldown: 1
   _waitShoot: 1
   _sphereCastRadius: 0.03
   _maxOAForce: 3.46
+  ObstacleActivo: 1
 --- !u!1 &664034973
 GameObject:
   m_ObjectHideFlags: 0
@@ -6786,11 +6888,20 @@ MonoBehaviour:
   _nextNode: 0
   tempNodesFollow: []
   _indexTemp: 0
+  _myRenderer: {fileID: 0}
+  _matBase: {fileID: 2100000, guid: f888d2c09e604b44f826ac9cf890f946, type: 2}
+  _matDano: {fileID: 2100000, guid: 85c6c8e4b11782c40bf274a8c6d910bf, type: 2}
+  _damageAnimationTime: 0.15
+  _matAttacking: {fileID: 2100000, guid: 6e205e96cdfb75d4a896a4632cc34b8b, type: 2}
+  _matFloking: {fileID: 2100000, guid: 1b83b190ec0e0eb4397ffda424431367, type: 2}
+  _matLooking: {fileID: 2100000, guid: 33a2737ae21dae64086ca5ca8845dac8, type: 2}
+  _matRunning: {fileID: 2100000, guid: 13b4e788124854a4898ef6a84cfc41bc, type: 2}
   _bullet: {fileID: 794717006307749250, guid: 4805f0a82c79add4ab1377462768aec5, type: 3}
   _shootCooldown: 1
   _waitShoot: 1
   _sphereCastRadius: 0.03
   _maxOAForce: 3.46
+  ObstacleActivo: 1
 --- !u!1 &747694341
 GameObject:
   m_ObjectHideFlags: 0
@@ -7243,11 +7354,20 @@ MonoBehaviour:
   _nextNode: 0
   tempNodesFollow: []
   _indexTemp: 0
+  _myRenderer: {fileID: 0}
+  _matBase: {fileID: 2100000, guid: 21b405630e40e954faede28ef20d9cb0, type: 2}
+  _matDano: {fileID: 2100000, guid: 85c6c8e4b11782c40bf274a8c6d910bf, type: 2}
+  _damageAnimationTime: 0.15
+  _matAttacking: {fileID: 2100000, guid: 3eb4f8874ff4125499a37d5aca6b12ef, type: 2}
+  _matFloking: {fileID: 2100000, guid: e2417fe81a8ddc643943c7c7dd7cf461, type: 2}
+  _matLooking: {fileID: 2100000, guid: 7a457173413173c4fa00c0059c1ac8f1, type: 2}
+  _matRunning: {fileID: 2100000, guid: 0e441676e6dc96a49b9ebbc4421d9024, type: 2}
   _bullet: {fileID: 794717006307749250, guid: 4805f0a82c79add4ab1377462768aec5, type: 3}
   _shootCooldown: 1
   _waitShoot: 1
   _sphereCastRadius: 0.03
   _maxOAForce: 3.46
+  ObstacleActivo: 1
 --- !u!1 &812757388
 GameObject:
   m_ObjectHideFlags: 0
@@ -7611,11 +7731,20 @@ MonoBehaviour:
   _nextNode: 0
   tempNodesFollow: []
   _indexTemp: 0
+  _myRenderer: {fileID: 0}
+  _matBase: {fileID: 2100000, guid: 21b405630e40e954faede28ef20d9cb0, type: 2}
+  _matDano: {fileID: 2100000, guid: 85c6c8e4b11782c40bf274a8c6d910bf, type: 2}
+  _damageAnimationTime: 0.15
+  _matAttacking: {fileID: 2100000, guid: 3eb4f8874ff4125499a37d5aca6b12ef, type: 2}
+  _matFloking: {fileID: 2100000, guid: e2417fe81a8ddc643943c7c7dd7cf461, type: 2}
+  _matLooking: {fileID: 2100000, guid: 7a457173413173c4fa00c0059c1ac8f1, type: 2}
+  _matRunning: {fileID: 2100000, guid: 0e441676e6dc96a49b9ebbc4421d9024, type: 2}
   _bullet: {fileID: 794717006307749250, guid: 4805f0a82c79add4ab1377462768aec5, type: 3}
   _shootCooldown: 1
   _waitShoot: 1
   _sphereCastRadius: 0.03
   _maxOAForce: 3.46
+  ObstacleActivo: 1
 --- !u!1 &883420259
 GameObject:
   m_ObjectHideFlags: 0
@@ -7897,11 +8026,20 @@ MonoBehaviour:
   _nextNode: 0
   tempNodesFollow: []
   _indexTemp: 0
+  _myRenderer: {fileID: 0}
+  _matBase: {fileID: 2100000, guid: 21b405630e40e954faede28ef20d9cb0, type: 2}
+  _matDano: {fileID: 2100000, guid: 85c6c8e4b11782c40bf274a8c6d910bf, type: 2}
+  _damageAnimationTime: 0.15
+  _matAttacking: {fileID: 2100000, guid: 3eb4f8874ff4125499a37d5aca6b12ef, type: 2}
+  _matFloking: {fileID: 2100000, guid: e2417fe81a8ddc643943c7c7dd7cf461, type: 2}
+  _matLooking: {fileID: 2100000, guid: 7a457173413173c4fa00c0059c1ac8f1, type: 2}
+  _matRunning: {fileID: 2100000, guid: 0e441676e6dc96a49b9ebbc4421d9024, type: 2}
   _bullet: {fileID: 794717006307749250, guid: 4805f0a82c79add4ab1377462768aec5, type: 3}
   _shootCooldown: 1
   _waitShoot: 1
   _sphereCastRadius: 0.03
   _maxOAForce: 3.46
+  ObstacleActivo: 1
 --- !u!1 &932701918
 GameObject:
   m_ObjectHideFlags: 0
@@ -9651,11 +9789,20 @@ MonoBehaviour:
   _nextNode: 0
   tempNodesFollow: []
   _indexTemp: 0
+  _myRenderer: {fileID: 0}
+  _matBase: {fileID: 2100000, guid: f888d2c09e604b44f826ac9cf890f946, type: 2}
+  _matDano: {fileID: 2100000, guid: 85c6c8e4b11782c40bf274a8c6d910bf, type: 2}
+  _damageAnimationTime: 0.15
+  _matAttacking: {fileID: 2100000, guid: 6e205e96cdfb75d4a896a4632cc34b8b, type: 2}
+  _matFloking: {fileID: 2100000, guid: 1b83b190ec0e0eb4397ffda424431367, type: 2}
+  _matLooking: {fileID: 2100000, guid: 33a2737ae21dae64086ca5ca8845dac8, type: 2}
+  _matRunning: {fileID: 2100000, guid: 13b4e788124854a4898ef6a84cfc41bc, type: 2}
   _bullet: {fileID: 794717006307749250, guid: 4805f0a82c79add4ab1377462768aec5, type: 3}
   _shootCooldown: 1
   _waitShoot: 1
   _sphereCastRadius: 0.03
   _maxOAForce: 3.46
+  ObstacleActivo: 1
 --- !u!1 &1059015691
 GameObject:
   m_ObjectHideFlags: 0
@@ -9933,6 +10080,12 @@ MonoBehaviour:
   _bullet: {fileID: 794717006307749250, guid: 4805f0a82c79add4ab1377462768aec5, type: 3}
   _shootCooldown: 1
   _textGameOver: {fileID: 1392735786}
+  _myRenderer: {fileID: 0}
+  _matBase: {fileID: 2100000, guid: 9e2caf7ffbb5ff945b4b61fc15f5c991, type: 2}
+  _matDano: {fileID: 2100000, guid: 85c6c8e4b11782c40bf274a8c6d910bf, type: 2}
+  _damageAnimationTime: 0.15
+  _matAttacking: {fileID: 2100000, guid: 7ee14be27908b154690de84bc320d5d7, type: 2}
+  _matGoing: {fileID: 2100000, guid: 0a26ca2c1dc30a549a7a297c6b0799a1, type: 2}
   _waitShoot: 1
 --- !u!1 &1195566193
 GameObject:
@@ -10053,6 +10206,7 @@ GameObject:
   - component: {fileID: 1203154702}
   - component: {fileID: 1203154701}
   - component: {fileID: 1203154705}
+  - component: {fileID: 1203154706}
   m_Layer: 19
   m_Name: ParedDeContencion (3)
   m_TagString: Untagged
@@ -10173,6 +10327,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &1203154706
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1203154700}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f62ec54f4602b3a4ba4ae795ac1cb146, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1209537105
 GameObject:
   m_ObjectHideFlags: 0
@@ -11345,11 +11511,20 @@ MonoBehaviour:
   _nextNode: 0
   tempNodesFollow: []
   _indexTemp: 0
+  _myRenderer: {fileID: 0}
+  _matBase: {fileID: 2100000, guid: f888d2c09e604b44f826ac9cf890f946, type: 2}
+  _matDano: {fileID: 2100000, guid: 85c6c8e4b11782c40bf274a8c6d910bf, type: 2}
+  _damageAnimationTime: 0.15
+  _matAttacking: {fileID: 2100000, guid: 6e205e96cdfb75d4a896a4632cc34b8b, type: 2}
+  _matFloking: {fileID: 2100000, guid: 1b83b190ec0e0eb4397ffda424431367, type: 2}
+  _matLooking: {fileID: 2100000, guid: 33a2737ae21dae64086ca5ca8845dac8, type: 2}
+  _matRunning: {fileID: 2100000, guid: 13b4e788124854a4898ef6a84cfc41bc, type: 2}
   _bullet: {fileID: 794717006307749250, guid: 4805f0a82c79add4ab1377462768aec5, type: 3}
   _shootCooldown: 1
   _waitShoot: 1
   _sphereCastRadius: 0.03
   _maxOAForce: 3.46
+  ObstacleActivo: 1
 --- !u!1 &1392735784
 GameObject:
   m_ObjectHideFlags: 0
@@ -11725,11 +11900,20 @@ MonoBehaviour:
   _nextNode: 0
   tempNodesFollow: []
   _indexTemp: 0
+  _myRenderer: {fileID: 0}
+  _matBase: {fileID: 2100000, guid: f888d2c09e604b44f826ac9cf890f946, type: 2}
+  _matDano: {fileID: 2100000, guid: 85c6c8e4b11782c40bf274a8c6d910bf, type: 2}
+  _damageAnimationTime: 0.15
+  _matAttacking: {fileID: 2100000, guid: 6e205e96cdfb75d4a896a4632cc34b8b, type: 2}
+  _matFloking: {fileID: 2100000, guid: 1b83b190ec0e0eb4397ffda424431367, type: 2}
+  _matLooking: {fileID: 2100000, guid: 33a2737ae21dae64086ca5ca8845dac8, type: 2}
+  _matRunning: {fileID: 2100000, guid: 13b4e788124854a4898ef6a84cfc41bc, type: 2}
   _bullet: {fileID: 794717006307749250, guid: 4805f0a82c79add4ab1377462768aec5, type: 3}
   _shootCooldown: 1
   _waitShoot: 1
   _sphereCastRadius: 0.03
   _maxOAForce: 3.46
+  ObstacleActivo: 1
 --- !u!1 &1442047342
 GameObject:
   m_ObjectHideFlags: 0
@@ -12251,11 +12435,20 @@ MonoBehaviour:
   _nextNode: 0
   tempNodesFollow: []
   _indexTemp: 0
+  _myRenderer: {fileID: 0}
+  _matBase: {fileID: 2100000, guid: f888d2c09e604b44f826ac9cf890f946, type: 2}
+  _matDano: {fileID: 2100000, guid: 85c6c8e4b11782c40bf274a8c6d910bf, type: 2}
+  _damageAnimationTime: 0.15
+  _matAttacking: {fileID: 2100000, guid: 6e205e96cdfb75d4a896a4632cc34b8b, type: 2}
+  _matFloking: {fileID: 2100000, guid: 1b83b190ec0e0eb4397ffda424431367, type: 2}
+  _matLooking: {fileID: 2100000, guid: 33a2737ae21dae64086ca5ca8845dac8, type: 2}
+  _matRunning: {fileID: 2100000, guid: 13b4e788124854a4898ef6a84cfc41bc, type: 2}
   _bullet: {fileID: 794717006307749250, guid: 4805f0a82c79add4ab1377462768aec5, type: 3}
   _shootCooldown: 1
   _waitShoot: 1
   _sphereCastRadius: 0.03
   _maxOAForce: 3.46
+  ObstacleActivo: 1
 --- !u!1 &1533196998
 GameObject:
   m_ObjectHideFlags: 0
@@ -12408,11 +12601,20 @@ MonoBehaviour:
   _nextNode: 0
   tempNodesFollow: []
   _indexTemp: 0
+  _myRenderer: {fileID: 0}
+  _matBase: {fileID: 2100000, guid: f888d2c09e604b44f826ac9cf890f946, type: 2}
+  _matDano: {fileID: 2100000, guid: 85c6c8e4b11782c40bf274a8c6d910bf, type: 2}
+  _damageAnimationTime: 0.15
+  _matAttacking: {fileID: 2100000, guid: 6e205e96cdfb75d4a896a4632cc34b8b, type: 2}
+  _matFloking: {fileID: 2100000, guid: 1b83b190ec0e0eb4397ffda424431367, type: 2}
+  _matLooking: {fileID: 2100000, guid: 33a2737ae21dae64086ca5ca8845dac8, type: 2}
+  _matRunning: {fileID: 2100000, guid: 13b4e788124854a4898ef6a84cfc41bc, type: 2}
   _bullet: {fileID: 794717006307749250, guid: 4805f0a82c79add4ab1377462768aec5, type: 3}
   _shootCooldown: 1
   _waitShoot: 1
   _sphereCastRadius: 0.03
   _maxOAForce: 3.46
+  ObstacleActivo: 1
 --- !u!1 &1540920343
 GameObject:
   m_ObjectHideFlags: 0
@@ -13455,11 +13657,20 @@ MonoBehaviour:
   _nextNode: 0
   tempNodesFollow: []
   _indexTemp: 0
+  _myRenderer: {fileID: 0}
+  _matBase: {fileID: 2100000, guid: f888d2c09e604b44f826ac9cf890f946, type: 2}
+  _matDano: {fileID: 2100000, guid: 85c6c8e4b11782c40bf274a8c6d910bf, type: 2}
+  _damageAnimationTime: 0.15
+  _matAttacking: {fileID: 2100000, guid: 6e205e96cdfb75d4a896a4632cc34b8b, type: 2}
+  _matFloking: {fileID: 2100000, guid: 1b83b190ec0e0eb4397ffda424431367, type: 2}
+  _matLooking: {fileID: 2100000, guid: 33a2737ae21dae64086ca5ca8845dac8, type: 2}
+  _matRunning: {fileID: 2100000, guid: 13b4e788124854a4898ef6a84cfc41bc, type: 2}
   _bullet: {fileID: 794717006307749250, guid: 4805f0a82c79add4ab1377462768aec5, type: 3}
   _shootCooldown: 1
   _waitShoot: 1
   _sphereCastRadius: 0.03
   _maxOAForce: 3.46
+  ObstacleActivo: 1
 --- !u!1 &1819379479
 GameObject:
   m_ObjectHideFlags: 0
@@ -13612,11 +13823,20 @@ MonoBehaviour:
   _nextNode: 0
   tempNodesFollow: []
   _indexTemp: 0
+  _myRenderer: {fileID: 0}
+  _matBase: {fileID: 2100000, guid: f888d2c09e604b44f826ac9cf890f946, type: 2}
+  _matDano: {fileID: 2100000, guid: 85c6c8e4b11782c40bf274a8c6d910bf, type: 2}
+  _damageAnimationTime: 0.15
+  _matAttacking: {fileID: 2100000, guid: 6e205e96cdfb75d4a896a4632cc34b8b, type: 2}
+  _matFloking: {fileID: 2100000, guid: 1b83b190ec0e0eb4397ffda424431367, type: 2}
+  _matLooking: {fileID: 2100000, guid: 33a2737ae21dae64086ca5ca8845dac8, type: 2}
+  _matRunning: {fileID: 2100000, guid: 13b4e788124854a4898ef6a84cfc41bc, type: 2}
   _bullet: {fileID: 794717006307749250, guid: 4805f0a82c79add4ab1377462768aec5, type: 3}
   _shootCooldown: 1
   _waitShoot: 1
   _sphereCastRadius: 0.03
   _maxOAForce: 3.46
+  ObstacleActivo: 1
 --- !u!1 &1871138593
 GameObject:
   m_ObjectHideFlags: 0
@@ -20188,6 +20408,12 @@ MonoBehaviour:
   _bullet: {fileID: 794717006307749250, guid: 4805f0a82c79add4ab1377462768aec5, type: 3}
   _shootCooldown: 1
   _textGameOver: {fileID: 1392735786}
+  _myRenderer: {fileID: 0}
+  _matBase: {fileID: 2100000, guid: 24a25f58361010441a0078958d3d2e70, type: 2}
+  _matDano: {fileID: 2100000, guid: 85c6c8e4b11782c40bf274a8c6d910bf, type: 2}
+  _damageAnimationTime: 0.15
+  _matAttacking: {fileID: 2100000, guid: ef78b597f28648347941cf1269daba28, type: 2}
+  _matGoing: {fileID: 2100000, guid: dcb579fdfa82d60499cd3063791e5467, type: 2}
   _waitShoot: 1
 --- !u!1 &2064174478
 GameObject:
@@ -20575,11 +20801,20 @@ MonoBehaviour:
   _nextNode: 0
   tempNodesFollow: []
   _indexTemp: 0
+  _myRenderer: {fileID: 0}
+  _matBase: {fileID: 2100000, guid: 21b405630e40e954faede28ef20d9cb0, type: 2}
+  _matDano: {fileID: 2100000, guid: 85c6c8e4b11782c40bf274a8c6d910bf, type: 2}
+  _damageAnimationTime: 0.15
+  _matAttacking: {fileID: 2100000, guid: 3eb4f8874ff4125499a37d5aca6b12ef, type: 2}
+  _matFloking: {fileID: 2100000, guid: e2417fe81a8ddc643943c7c7dd7cf461, type: 2}
+  _matLooking: {fileID: 2100000, guid: 7a457173413173c4fa00c0059c1ac8f1, type: 2}
+  _matRunning: {fileID: 2100000, guid: 0e441676e6dc96a49b9ebbc4421d9024, type: 2}
   _bullet: {fileID: 794717006307749250, guid: 4805f0a82c79add4ab1377462768aec5, type: 3}
   _shootCooldown: 1
   _waitShoot: 1
   _sphereCastRadius: 0.03
   _maxOAForce: 3.46
+  ObstacleActivo: 1
 --- !u!1 &2116875451
 GameObject:
   m_ObjectHideFlags: 0
@@ -20732,11 +20967,20 @@ MonoBehaviour:
   _nextNode: 0
   tempNodesFollow: []
   _indexTemp: 0
+  _myRenderer: {fileID: 0}
+  _matBase: {fileID: 2100000, guid: 21b405630e40e954faede28ef20d9cb0, type: 2}
+  _matDano: {fileID: 2100000, guid: 85c6c8e4b11782c40bf274a8c6d910bf, type: 2}
+  _damageAnimationTime: 0.15
+  _matAttacking: {fileID: 2100000, guid: 3eb4f8874ff4125499a37d5aca6b12ef, type: 2}
+  _matFloking: {fileID: 2100000, guid: e2417fe81a8ddc643943c7c7dd7cf461, type: 2}
+  _matLooking: {fileID: 2100000, guid: 7a457173413173c4fa00c0059c1ac8f1, type: 2}
+  _matRunning: {fileID: 2100000, guid: 0e441676e6dc96a49b9ebbc4421d9024, type: 2}
   _bullet: {fileID: 794717006307749250, guid: 4805f0a82c79add4ab1377462768aec5, type: 3}
   _shootCooldown: 1
   _waitShoot: 1
   _sphereCastRadius: 0.03
   _maxOAForce: 3.46
+  ObstacleActivo: 1
 --- !u!1 &2117741745
 GameObject:
   m_ObjectHideFlags: 0

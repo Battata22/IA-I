@@ -43,6 +43,8 @@ public class MinionIdleState : IState
     {
         _minionScript._velocity = Vector3.zero;
         _minionScript._state = MinionState.Idle;
+        _minionScript.ObstacleActivo = true;
+        _minionScript._myRenderer.material = _minionScript._matBase;
     }
 
     public void OnUpdate()
@@ -52,7 +54,7 @@ public class MinionIdleState : IState
 
     public void OnExit()
     {
-
+        _minionScript._myRenderer.material = _minionScript._matBase;
     }
 
 }
@@ -73,6 +75,8 @@ public class MinionFlockingState : IState
     public void OnEnter()
     {
         _minionScript._state = MinionState.Flocking;
+        _minionScript.ObstacleActivo = true;
+        _minionScript._myRenderer.material = _minionScript._matFloking;
     }
 
     public void OnUpdate()
@@ -90,7 +94,7 @@ public class MinionFlockingState : IState
 
     public void OnExit()
     {
-
+        _minionScript._myRenderer.material = _minionScript._matBase;
     }
 
 }
@@ -119,6 +123,8 @@ public class MinionAttackingState : IState
         _minionScript._velocity = Vector3.zero;
         _target = null;
         _targetDistance = 10000;
+        _minionScript.ObstacleActivo = true;
+        _minionScript._myRenderer.material = _minionScript._matAttacking;
     }
 
     public void OnUpdate()
@@ -149,7 +155,7 @@ public class MinionAttackingState : IState
 
     public void OnExit()
     {
-
+        _minionScript._myRenderer.material = _minionScript._matBase;
     }
 
 }
@@ -171,6 +177,8 @@ public class MinionRunningState : IState
     {
         _minionScript.CalculateRunBase();
         _minionScript._state = MinionState.Running;
+        _minionScript.ObstacleActivo = true;
+        _minionScript._myRenderer.material = _minionScript._matRunning;
     }
 
     public void OnUpdate()
@@ -180,7 +188,7 @@ public class MinionRunningState : IState
 
     public void OnExit()
     {
-
+        _minionScript._myRenderer.material = _minionScript._matBase;
     }
 
 }
@@ -202,6 +210,8 @@ public class MinionLookingForBossState : IState
     {
         _minionScript.GoToBoss();
         _minionScript._state = MinionState.LookingForBoss;
+        _minionScript.ObstacleActivo = true;
+        _minionScript._myRenderer.material = _minionScript._matLooking;
     }
 
     public void OnUpdate()
@@ -212,7 +222,40 @@ public class MinionLookingForBossState : IState
 
     public void OnExit()
     {
+        _minionScript._myRenderer.material = _minionScript._matBase;
+    }
 
+}
+
+//------------------------------------------------------------------------------------------------------------------------------------------------------
+
+public class MinionLostState : IState
+{
+
+    FSMBosses _fsm;
+    MinionBehaivour _minionScript;
+
+    public MinionLostState(MinionBehaivour minionScript)
+    {
+        _minionScript = minionScript;
+    }
+
+    public void OnEnter()
+    {
+        _minionScript._state = MinionState.Lost;
+        _minionScript.ObstacleActivo = false;
+        _minionScript._myRenderer.material = _minionScript._matBase;
+    }
+
+    public void OnUpdate()
+    {
+        _minionScript.Lost();
+    }
+
+    public void OnExit()
+    {
+        _minionScript.ObstacleActivo = true;
+        _minionScript._myRenderer.material = _minionScript._matBase;
     }
 
 }

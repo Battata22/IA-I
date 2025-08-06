@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -31,6 +32,19 @@ public class MinionBehaivour : FOV_Agent, IDamageable, IBoidFinal
     public List<Node> tempNodesFollow;
     public int _indexTemp;
 
+    //-----------------------Daño--------------------------------
+
+    public Renderer _myRenderer;
+    public Material _matBase, _matDano;
+    public float _damageAnimationTime;
+
+    //-----------------------Feedback--------------------------------
+
+    public Material _matAttacking;
+    public Material _matFloking;
+    public Material _matLooking;
+    public Material _matRunning;
+
     //-----------------------Balas--------------------------------
 
     [SerializeField] BulletBehaviour _bullet;
@@ -41,9 +55,16 @@ public class MinionBehaivour : FOV_Agent, IDamageable, IBoidFinal
 
     [SerializeField, Range(0f, 2f)] float _sphereCastRadius = 1;
     [SerializeField, Range(1f, 5f)] float _maxOAForce;
+    public bool ObstacleActivo = true;
 
     private void Awake()
     {
+        _life = _maxLife;
+
+        _myRenderer = GetComponent<Renderer>();
+
+        //-----------------------------------------------------------------------------------------
+
         _fsm = new FSMMinions();
 
         _fsm.AddState(MinionState.Idle, new MinionIdleState(this));
@@ -55,6 +76,8 @@ public class MinionBehaivour : FOV_Agent, IDamageable, IBoidFinal
         _fsm.AddState(MinionState.LookingForBoss, new MinionLookingForBossState(this));
 
         _fsm.AddState(MinionState.Running, new MinionRunningState(this));
+
+        _fsm.AddState(MinionState.Lost, new MinionRunningState(this));
 
 
         //default
@@ -72,8 +95,6 @@ public class MinionBehaivour : FOV_Agent, IDamageable, IBoidFinal
             FlockingManager.instance._myCelesteTeammates.Add(this);
             MouseManager.RefreshSearchCeleste += GoToBoss;
         }
-
-        _life = _maxLife;
     }
 
     protected override void Start()
@@ -85,10 +106,17 @@ public class MinionBehaivour : FOV_Agent, IDamageable, IBoidFinal
 
     protected override void Update()
     {
-        AddForce(ObstacleAvoidance());
+        if (ObstacleActivo)
+        {
+            AddForce(ObstacleAvoidance());
+        }
+        else
+        {
+            Lost();
+        }
 
-        //Movimiento Siempre
-        transform.position = (transform.position + _velocity * Time.deltaTime);
+            //Movimiento Siempre
+            transform.position = (transform.position + _velocity * Time.deltaTime);
         transform.forward = _velocity;
 
         _fsm.FakeUpdate();
@@ -321,6 +349,21 @@ public class MinionBehaivour : FOV_Agent, IDamageable, IBoidFinal
 
     //-----------------------------------------------
 
+    public void Lost()
+    {
+        if (!InLOS(transform.position, _myBoss.transform.position))
+        {
+            AddForce(Arrive(_bossNode.transform.position));
+        }
+        else
+        {
+            //_fsm.ChangeState(MinionState.Flocking);
+            ObstacleActivo = true;
+        }
+    }
+
+    //-----------------------------------------------
+
     public bool CheckForEnemiesNearby()
     {
         bool alguien = false;
@@ -454,14 +497,26 @@ public class MinionBehaivour : FOV_Agent, IDamageable, IBoidFinal
 
     public void TakeDamage(int damage)
     {
+        StartCoroutine(DamageAnimation());
+
         _life -= damage;
 
         if (_life <= 0)
         {
-            print("Murio " + name);
+            StopCoroutine(DamageAnimation());
+            //print("Murio " + name);
             gameObject.SetActive(false);
             transform.position = new Vector3(100, 100, 100);
         }
+    }
+
+    //-----------------------------------------------
+
+    IEnumerator DamageAnimation()
+    {
+        _myRenderer.material = _matDano;
+        yield return new WaitForSeconds(_damageAnimationTime);
+        _myRenderer.material = _matBase;
     }
 
     //-----------------------------------------------
@@ -508,13 +563,26 @@ public class MinionBehaivour : FOV_Agent, IDamageable, IBoidFinal
 
     //-----------------------------------------------
 
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.collider.gameObject.layer == 19)
-        {
-            print("me mame wey");
-        }
-    }
+    #region Descartado
+    //private void OnTriggerEnter(Collider other)
+    //{
+    //    if (other.gameObject.layer == 19 && other != null && _state != MinionState.Lost)
+    //    {
+    //        _fsm.ChangeState(MinionState.Lost);
+    //        print("test");
+
+    //    }
+    //}
+
+    //private void OnTriggerStay(Collider other)
+    //{
+    //    if (other.gameObject.layer == 19 && other != null && _state != MinionState.Lost)
+    //    {
+    //        _fsm.ChangeState(MinionState.Lost);
+    //        print("test");
+    //    }
+    //} 
+    #endregion
 
     //-----------------------------------------------
 
@@ -535,5 +603,5 @@ public class MinionBehaivour : FOV_Agent, IDamageable, IBoidFinal
 
 public enum MinionState
 {
-    Idle, Flocking, Attacking, Running, LookingForBoss
+    Idle, Flocking, Attacking, Running, LookingForBoss, Lost
 }
