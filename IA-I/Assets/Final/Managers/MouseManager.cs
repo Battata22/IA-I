@@ -60,6 +60,11 @@ public class MouseManager : MonoBehaviour
         {
             SceneManager.LoadScene(0);
         }
+
+        if (Input.GetKeyUp(KeyCode.Escape))
+        {
+            Application.Quit();
+        }
     }
 
     void Click0()
@@ -71,11 +76,11 @@ public class MouseManager : MonoBehaviour
         if (Physics.Raycast(ray, out hit, Mathf.Infinity) && hit.collider.gameObject.layer == 18)
         {
             _tempNodeNaranja.transform.position = new Vector3(hit.point.x, 0, hit.point.z);
+
+            _tempNodeNaranja.EjecutarTempNode();
+
+            _jefeNaranja.GoToClick();
         }
-
-        _tempNodeNaranja.EjecutarTempNode();
-
-        _jefeNaranja.GoToClick();
     }
 
     void Click1()
@@ -87,10 +92,10 @@ public class MouseManager : MonoBehaviour
         if (Physics.Raycast(ray, out hit, Mathf.Infinity) && hit.collider.gameObject.layer == 18)
         {
             _tempNodeCeleste.transform.position = new Vector3(hit.point.x, 0, hit.point.z);
+
+            _tempNodeCeleste.EjecutarTempNode();
+
+            _jefeCeleste.GoToClick();
         }
-
-        _tempNodeCeleste.EjecutarTempNode();
-
-        _jefeCeleste.GoToClick();
     }
 }
